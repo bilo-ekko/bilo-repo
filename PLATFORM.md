@@ -3,8 +3,8 @@ A simplified platform for compensating to carbon contributions
 Apps:
 
 - Frontends
-    - Dashboard
-    - SDK renderer
+    - Hub (Next.js web dashboard app)
+    - SDK renderers (one for each app)
         - impact-embedded
         - impact-page
         - checkout
@@ -20,7 +20,7 @@ Apps:
             - output: object with the relevant data, including carbon impact (grams and ounces)
         - GET `/carbon/quotes/:id`
             - input: the id that the endpoint `carbon/calculate` created
-            - output: the full response / quote
+            - output: the full response/quote
         - GET `/carbon/equivalents?(grams|ounces)={number}`
             - input: the grams/ounces we want the equivalents for
             - output: an array to indicate the equivalents of the carbon impact, e.g.
