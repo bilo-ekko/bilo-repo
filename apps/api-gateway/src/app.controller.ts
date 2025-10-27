@@ -35,12 +35,12 @@ export class AppController {
     );
   }
 
-  // Carbon/Impact Calculation Service Routes (Port 3002-3003)
-  @Post('/impact/calculate')
-  calculateImpact(@Body() body: any) {
+  // Sessions Service Routes (Port 3003)
+  @Post('/sessions/create')
+  createSession(@Body() body: any) {
     return this.appService.proxyToService(
-      'impact-calculation-service',
-      'impact/calculate',
+      'sessions-service',
+      'sessions/create',
       body,
     );
   }

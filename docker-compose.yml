@@ -13,7 +13,7 @@ services:
       - NODE_ENV=production
     depends_on:
       - auth-service
-      - impact-calculation-service
+      - sessions-service
       - projects-service
       - equivalents-service
       - messaging-service
@@ -50,9 +50,9 @@ services:
     networks:
       - microservices
 
-  impact-calculation-service:
+  sessions-service:
     build:
-      context: ./services/ts/impact-calculation-service
+      context: ./services/ts/sessions-service
       dockerfile: ../../Dockerfile.nestjs
     ports:
       - "3003:3003"

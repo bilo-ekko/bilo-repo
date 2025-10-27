@@ -17,7 +17,7 @@ services/
 ├── ts/                          # TypeScript/NestJS Services
 │   ├── auth-service/           # Port 3001
 │   ├── calculation-service/    # Port 3002
-│   ├── impact-calculation-service/  # Port 3003
+│   ├── sessions-service/  # Port 3003
 │   ├── projects-service/       # Port 3004
 │   ├── equivalents-service/    # Port 3005
 │   └── messaging-service/      # Port 3009
@@ -161,7 +161,7 @@ cd apps/api-gateway && pnpm install && pnpm dev
 
 # Services
 cd services/ts/auth-service && pnpm install && pnpm dev
-cd services/ts/impact-calculation-service && pnpm install && pnpm dev
+cd services/ts/sessions-service && pnpm install && pnpm dev
 cd services/ts/projects-service && pnpm install && pnpm dev
 cd services/ts/equivalents-service && pnpm install && pnpm dev
 cd services/ts/messaging-service && pnpm install && pnpm dev

@@ -108,7 +108,7 @@ start_ts_services() {
     services=(
         "auth-service:3001"
         "calculation-service:3002"
-        "impact-calculation-service:3003"
+        "sessions-service:3003"
         "projects-service:3004"
         "equivalents-service:3005"
         "messaging-service:3009"

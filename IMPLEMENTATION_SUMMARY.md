@@ -24,7 +24,7 @@ services/
 | **API Gateway** | 3000 | TypeScript (NestJS) | ✅ Built | `apps/api-gateway/` |
 | Auth Service | 3001 | TypeScript (NestJS) | ✅ Built | `services/ts/auth-service/` |
 | Calculation Service | 3002 | TypeScript (NestJS) | ✅ Existing | `services/ts/calculation-service/` |
-| Impact Calculation Service | 3003 | TypeScript (NestJS) | ✅ Built | `services/ts/impact-calculation-service/` |
+| Sessions Service | 3003 | TypeScript (NestJS) | ✅ Built | `services/ts/sessions-service/` |
 | Projects Service | 3004 | TypeScript (NestJS) | ✅ Built | `services/ts/projects-service/` |
 | Equivalents Service | 3005 | TypeScript (NestJS) | ✅ Built | `services/ts/equivalents-service/` |
 | Messaging Service | 3009 | TypeScript (NestJS) | ✅ Built | `services/ts/messaging-service/` |

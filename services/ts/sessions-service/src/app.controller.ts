@@ -12,6 +12,6 @@ export class AppController {
 
   @Get('/health')
   health() {
-    return { ok: true, service: 'impact-calculation-service' };
+    return { ok: true, service: 'sessions-service' };
   }
 }

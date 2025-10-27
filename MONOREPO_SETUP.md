@@ -61,7 +61,7 @@ Check that node_modules exist:
 
 ```bash
 ls -la services/ts/auth-service/node_modules
-ls -la services/ts/impact-calculation-service/node_modules
+ls -la services/ts/sessions-service/node_modules
 ls -la apps/api-gateway/node_modules
 ```
 

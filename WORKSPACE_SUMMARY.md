@@ -13,7 +13,7 @@ The monorepo includes **13 TypeScript/Node.js packages** managed by pnpm workspa
 - ✅ `auth-service` - Port 3001
 - ✅ `calculation-service` - Port 3002
 - ✅ `equivalents-service` - Port 3005
-- ✅ `impact-calculation-service` - Port 3003
+- ✅ `sessions-service` - Port 3003
 - ✅ `messaging-service` - Port 3009
 - ✅ `projects-service` - Port 3004
 
@@ -162,7 +162,7 @@ bilo-repo/
 │   │   ├── auth-service/           ✅ Port 3001
 │   │   ├── calculation-service/    ✅ Port 3002
 │   │   ├── equivalents-service/    ✅ Port 3005
-│   │   ├── impact-calculation-service/  ✅ Port 3003
+│   │   ├── sessions-service/  ✅ Port 3003
 │   │   ├── messaging-service/      ✅ Port 3009
 │   │   └── projects-service/       ✅ Port 3004
 │   │

@@ -65,4 +65,3 @@ func getFundDetails(c *fiber.Ctx) error {
 		"message": "Fund details",
 	})
 }
-

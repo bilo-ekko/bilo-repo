@@ -88,8 +88,8 @@ pnpm dev
 cd services/ts/calculation-service
 pnpm dev
 
-# Impact Calculation Service (Port 3003)
-cd services/ts/impact-calculation-service
+# Sessions Service (Port 3003)
+cd services/ts/sessions-service
 pnpm dev
 
 # Projects Service (Port 3004)
@@ -200,7 +200,7 @@ bilo-repo/
 │   ├── ts/                   # TypeScript/NestJS Services
 │   │   ├── auth-service/     # Port 3001
 │   │   ├── calculation-service/   # Port 3002
-│   │   ├── impact-calculation-service/  # Port 3003
+│   │   ├── sessions-service/  # Port 3003
 │   │   ├── projects-service/ # Port 3004
 │   │   ├── equivalents-service/  # Port 3005
 │   │   └── messaging-service/    # Port 3009

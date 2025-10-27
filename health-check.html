@@ -358,7 +358,7 @@
                 endpoint: 'http://localhost:3002/health' 
             },
             { 
-                name: 'Impact Calculation', 
+                name: 'Sessions Service', 
                 port: 3003, 
                 language: 'TypeScript (NestJS)', 
                 endpoint: 'http://localhost:3003/health' 
@@ -497,8 +497,8 @@
                 autoRefreshInterval = null;
                 statusEl.textContent = 'OFF';
             } else {
-                autoRefreshInterval = setInterval(checkAllServices, 5000);
-                statusEl.textContent = 'ON (5s)';
+                autoRefreshInterval = setInterval(checkAllServices, 3000);
+                statusEl.textContent = 'ON (3s)';
                 checkAllServices();
             }
         }

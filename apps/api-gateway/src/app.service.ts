@@ -22,11 +22,11 @@ export class AppService {
       language: 'TypeScript (NestJS)',
       purpose: 'Carbon tracking and calculations',
     },
-    'impact-calculation-service': {
-      name: 'Impact Calculation Service',
+    'sessions-service': {
+      name: 'Sessions Service',
       baseUrl: 'http://localhost:3003',
       language: 'TypeScript (NestJS)',
-      purpose: 'Data transforms, environmental factors, scientific constants',
+      purpose: 'User sessions, state management, session data',
     },
     'projects-service': {
       name: 'Projects Service',
