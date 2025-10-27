@@ -1,0 +1,21 @@
+{
+  "name": "web-components",
+  "version": "1.0.0",
+  "description": "Custom web components library",
+  "main": "index.html",
+  "scripts": {
+    "start": "npx serve -p 9090"
+  },
+  "keywords": [
+    "web-components",
+    "custom-elements",
+    "auto-complete",
+    "color-input"
+  ],
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "serve": "^14.2.1"
+  }
+}
+

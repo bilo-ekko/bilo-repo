@@ -1,0 +1,17 @@
+{
+  "name": "portfolio-service",
+  "version": "1.0.0",
+  "description": "Portfolio aggregation and reporting service built with C# and .NET Core.",
+  "main": "index.js",
+  "scripts": {
+    "build": "dotnet build",
+    "start": "dotnet run",
+    "dev": "dotnet run --watch",
+    "lint": "dotnet format --verify-no-changes",
+    "check-types": "dotnet build",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}

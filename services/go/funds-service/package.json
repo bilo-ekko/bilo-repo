@@ -1,0 +1,18 @@
+{
+  "name": "funds-service",
+  "version": "1.0.0",
+  "description": "Internal aggregations and reconciliation flows service built with Go.",
+  "main": "index.js",
+  "scripts": {
+    "build": "go build -o funds-service main.go",
+    "start": "funds-service",
+    "dev": "go run main.go",
+    "lint": "golangci-lint run",
+    "check-types": "go build -o /dev/null main.go",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "kill": "kill -9 $(lsof -ti:3101) 2>/dev/null || echo 'No process running on port 3101'"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}

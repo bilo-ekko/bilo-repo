@@ -1,0 +1,18 @@
+{
+  "name": "transactions-service",
+  "version": "1.0.0",
+  "description": "High-volume financial events service built with Go and Fiber.",
+  "main": "index.js",
+  "scripts": {
+    "build": "go build -o transactions-service main.go",
+    "start": "transactions-service",
+    "dev": "go run main.go",
+    "lint": "golangci-lint run",
+    "check-types": "go build -o /dev/null main.go",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "kill": "kill -9 $(lsof -ti:3100) 2>/dev/null || echo 'No process running on port 3100'"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}

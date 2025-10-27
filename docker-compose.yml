@@ -1,0 +1,165 @@
+version: '3.8'
+
+services:
+  # API Gateway
+  api-gateway:
+    build:
+      context: ./apps/api-gateway
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    environment:
+      - PORT=3000
+      - NODE_ENV=production
+    depends_on:
+      - auth-service
+      - impact-calculation-service
+      - projects-service
+      - equivalents-service
+      - messaging-service
+      - transactions-service
+      - funds-service
+      - payments-service
+      - portfolio-service
+      - analytics-service
+    networks:
+      - microservices
+
+  # TypeScript/NestJS Services
+  auth-service:
+    build:
+      context: ./services/ts/auth-service
+      dockerfile: ../../Dockerfile.nestjs
+    ports:
+      - "3001:3001"
+    environment:
+      - PORT=3001
+      - NODE_ENV=production
+    networks:
+      - microservices
+
+  calculation-service:
+    build:
+      context: ./services/ts/calculation-service
+      dockerfile: Dockerfile
+    ports:
+      - "3002:3002"
+    environment:
+      - PORT=3002
+      - NODE_ENV=production
+    networks:
+      - microservices
+
+  impact-calculation-service:
+    build:
+      context: ./services/ts/impact-calculation-service
+      dockerfile: ../../Dockerfile.nestjs
+    ports:
+      - "3003:3003"
+    environment:
+      - PORT=3003
+      - NODE_ENV=production
+    networks:
+      - microservices
+
+  projects-service:
+    build:
+      context: ./services/ts/projects-service
+      dockerfile: ../../Dockerfile.nestjs
+    ports:
+      - "3004:3004"
+    environment:
+      - PORT=3004
+      - NODE_ENV=production
+    networks:
+      - microservices
+
+  equivalents-service:
+    build:
+      context: ./services/ts/equivalents-service
+      dockerfile: ../../Dockerfile.nestjs
+    ports:
+      - "3005:3005"
+    environment:
+      - PORT=3005
+      - NODE_ENV=production
+    networks:
+      - microservices
+
+  messaging-service:
+    build:
+      context: ./services/ts/messaging-service
+      dockerfile: ../../Dockerfile.nestjs
+    ports:
+      - "3009:3009"
+    environment:
+      - PORT=3009
+      - NODE_ENV=production
+    networks:
+      - microservices
+
+  # Go Services
+  transactions-service:
+    build:
+      context: ./services/go/transactions-service
+      dockerfile: Dockerfile
+    ports:
+      - "3100:3100"
+    environment:
+      - PORT=3100
+    networks:
+      - microservices
+
+  funds-service:
+    build:
+      context: ./services/go/funds-service
+      dockerfile: Dockerfile
+    ports:
+      - "3101:3101"
+    environment:
+      - PORT=3101
+    networks:
+      - microservices
+
+  payments-service:
+    build:
+      context: ./services/go/payments-service
+      dockerfile: Dockerfile
+    ports:
+      - "3102:3102"
+    environment:
+      - PORT=3102
+      - STRIPE_API_KEY=${STRIPE_API_KEY}
+      - ADYEN_API_KEY=${ADYEN_API_KEY}
+    networks:
+      - microservices
+
+  # .NET Services
+  portfolio-service:
+    build:
+      context: ./services/cs/portfolio-service
+      dockerfile: Dockerfile
+    ports:
+      - "3200:3200"
+    environment:
+      - PORT=3200
+      - ASPNETCORE_ENVIRONMENT=Production
+    networks:
+      - microservices
+
+  analytics-service:
+    build:
+      context: ./services/cs/analytics-service
+      dockerfile: Dockerfile
+    ports:
+      - "3201:3201"
+    environment:
+      - PORT=3201
+      - ASPNETCORE_ENVIRONMENT=Production
+    networks:
+      - microservices
+
+networks:
+  microservices:
+    driver: bridge
+

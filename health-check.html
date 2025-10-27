@@ -1,0 +1,513 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Microservices Health Check Dashboard</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 2rem;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            color: white;
+            margin-bottom: 3rem;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+            font-weight: 700;
+        }
+
+        .subtitle {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+
+        .controls {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            color: white;
+        }
+
+        .btn-primary {
+            background: #10b981;
+        }
+
+        .btn-primary:hover {
+            background: #059669;
+            transform: translateY(-2px);
+        }
+
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(10px);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .stats {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            color: white;
+            font-size: 0.9rem;
+        }
+
+        .stat {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .stat-value {
+            font-size: 1.5rem;
+            font-weight: 700;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🚀 Microservices Health Dashboard</h1>
+            <p class="subtitle">Real-time status monitoring for all services</p>
+        </header>
+
+        <div class="controls">
+            <button class="btn btn-primary" onclick="checkAllServices()">
+                🔄 Refresh All
+            </button>
+            <button class="btn btn-secondary" onclick="toggleAutoRefresh()">
+                ⏱️ Auto-refresh: <span id="autoRefreshStatus">OFF</span>
+            </button>
+        </div>
+
+        <div class="services-grid" id="servicesGrid"></div>
+
+        <div class="stats">
+            <div class="stat">
+                <span>✅ Healthy:</span>
+                <span class="stat-value" id="healthyCount">0</span>
+            </div>
+            <div class="stat">
+                <span>⚠️ Slow:</span>
+                <span class="stat-value" id="slowCount">0</span>
+            </div>
+            <div class="stat">
+                <span>❌ Down:</span>
+                <span class="stat-value" id="downCount">0</span>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Define the service-status-card web component
+        class ServiceStatusCard extends HTMLElement {
+            constructor() {
+                super();
+                this.attachShadow({ mode: 'open' });
+            }
+
+            static get observedAttributes() {
+                return ['name', 'port', 'status', 'response-time', 'language'];
+            }
+
+            connectedCallback() {
+                this.render();
+            }
+
+            attributeChangedCallback() {
+                this.render();
+            }
+
+            getStatusColor(status) {
+                switch(status) {
+                    case 'healthy': return '#10b981';
+                    case 'slow': return '#f59e0b';
+                    case 'down': return '#ef4444';
+                    default: return '#6b7280';
+                }
+            }
+
+            getLanguageTag(language) {
+                if (language.includes('TypeScript')) return { text: 'TS', class: 'typescript' };
+                if (language.includes('Go')) return { text: 'Go', class: 'go' };
+                if (language.includes('.NET')) return { text: 'C#', class: 'dotnet' };
+                return { text: 'Unknown', class: '' };
+            }
+
+            render() {
+                const name = this.getAttribute('name') || 'Unknown Service';
+                const port = this.getAttribute('port') || '0000';
+                const status = this.getAttribute('status') || 'checking';
+                const responseTime = this.getAttribute('response-time') || '-';
+                const language = this.getAttribute('language') || '';
+
+                const statusColor = this.getStatusColor(status);
+                const languageTag = this.getLanguageTag(language);
+
+                this.shadowRoot.innerHTML = `
+                    <style>
+                        .card {
+                            background: white;
+                            border-radius: 12px;
+                            padding: 1.5rem;
+                            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+                            transition: all 0.3s ease;
+                            position: relative;
+                            overflow: hidden;
+                            opacity: ${status === 'healthy' ? '1' : '0.75'};
+                        }
+
+                        .card:hover {
+                            transform: translateY(-4px);
+                            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.2);
+                            opacity: 1;
+                        }
+
+                        .card-header {
+                            display: flex;
+                            align-items: center;
+                            justify-content: space-between;
+                            margin-bottom: 1rem;
+                        }
+
+                        .service-info {
+                            flex: 1;
+                        }
+
+                        .service-name {
+                            font-size: 1.1rem;
+                            font-weight: 700;
+                            color: #1f2937;
+                            margin-bottom: 0.25rem;
+                        }
+
+                        .service-meta {
+                            font-size: 0.875rem;
+                            color: #6b7280;
+                            display: flex;
+                            align-items: center;
+                            gap: 0.5rem;
+                        }
+
+                        .language-tag {
+                            display: inline-block;
+                            padding: 0.125rem 0.5rem;
+                            border-radius: 4px;
+                            font-size: 0.75rem;
+                            font-weight: 600;
+                            text-transform: uppercase;
+                        }
+
+                        .language-tag.typescript {
+                            background: #3178c6;
+                            color: white;
+                        }
+
+                        .language-tag.go {
+                            background: #00add8;
+                            color: white;
+                        }
+
+                        .language-tag.dotnet {
+                            background: #512bd4;
+                            color: white;
+                        }
+
+                        .status-indicator {
+                            width: 16px;
+                            height: 16px;
+                            border-radius: 50%;
+                            background: ${statusColor};
+                            box-shadow: 0 0 0 4px ${statusColor}20;
+                            animation: ${status === 'checking' ? 'pulse 2s infinite' : 'none'};
+                        }
+
+                        .card-body {
+                            display: flex;
+                            justify-content: space-between;
+                            align-items: center;
+                            padding-top: 1rem;
+                            border-top: 1px solid #e5e7eb;
+                        }
+
+                        .metric {
+                            text-align: center;
+                        }
+
+                        .metric-label {
+                            font-size: 0.75rem;
+                            color: #6b7280;
+                            text-transform: uppercase;
+                            letter-spacing: 0.05em;
+                        }
+
+                        .metric-value {
+                            font-size: 1.25rem;
+                            font-weight: 700;
+                            color: #1f2937;
+                            margin-top: 0.25rem;
+                        }
+
+                        .status-badge {
+                            display: inline-block;
+                            padding: 0.25rem 0.75rem;
+                            border-radius: 9999px;
+                            font-size: 0.75rem;
+                            font-weight: 600;
+                            text-transform: uppercase;
+                            background: ${statusColor}20;
+                            color: ${statusColor};
+                        }
+
+                        @keyframes pulse {
+                            0%, 100% {
+                                opacity: 1;
+                            }
+                            50% {
+                                opacity: 0.5;
+                            }
+                        }
+                    </style>
+
+                    <div class="card">
+                        <div class="card-header">
+                            <div class="service-info">
+                                <div class="service-name">${name}</div>
+                                <div class="service-meta">
+                                    <span>Port ${port}</span>
+                                    <span class="language-tag ${languageTag.class}">${languageTag.text}</span>
+                                </div>
+                            </div>
+                            <div class="status-indicator"></div>
+                        </div>
+                        <div class="card-body">
+                            <div class="metric">
+                                <div class="metric-label">Status</div>
+                                <div class="status-badge">${status}</div>
+                            </div>
+                            <div class="metric">
+                                <div class="metric-label">Response</div>
+                                <div class="metric-value">${responseTime}</div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }
+        }
+
+        // Register the web component
+        customElements.define('service-status-card', ServiceStatusCard);
+
+        // Service configuration
+        const services = [
+            { 
+                name: 'API Gateway', 
+                port: 3000, 
+                language: 'TypeScript (NestJS)', 
+                endpoint: 'http://localhost:3000/health' 
+            },
+            { 
+                name: 'Auth Service', 
+                port: 3001, 
+                language: 'TypeScript (NestJS)', 
+                endpoint: 'http://localhost:3001/health' 
+            },
+            { 
+                name: 'Calculation Service', 
+                port: 3002, 
+                language: 'TypeScript (NestJS)', 
+                endpoint: 'http://localhost:3002/health' 
+            },
+            { 
+                name: 'Impact Calculation', 
+                port: 3003, 
+                language: 'TypeScript (NestJS)', 
+                endpoint: 'http://localhost:3003/health' 
+            },
+            { 
+                name: 'Projects Service', 
+                port: 3004, 
+                language: 'TypeScript (NestJS)', 
+                endpoint: 'http://localhost:3004/health' 
+            },
+            { 
+                name: 'Equivalents Service', 
+                port: 3005, 
+                language: 'TypeScript (NestJS)', 
+                endpoint: 'http://localhost:3005/health' 
+            },
+            { 
+                name: 'Messaging Service', 
+                port: 3009, 
+                language: 'TypeScript (NestJS)', 
+                endpoint: 'http://localhost:3009/health' 
+            },
+            { 
+                name: 'Transactions Service', 
+                port: 3100, 
+                language: 'Go (Fiber)', 
+                endpoint: 'http://localhost:3100/health' 
+            },
+            { 
+                name: 'Funds Service', 
+                port: 3101, 
+                language: 'Go', 
+                endpoint: 'http://localhost:3101/health' 
+            },
+            { 
+                name: 'Payments Service', 
+                port: 3102, 
+                language: 'Go', 
+                endpoint: 'http://localhost:3102/health' 
+            },
+            { 
+                name: 'Portfolio Service', 
+                port: 3200, 
+                language: 'C# (.NET Core)', 
+                endpoint: 'http://localhost:3200/health' 
+            },
+            { 
+                name: 'Analytics Service', 
+                port: 3201, 
+                language: 'C# (.NET Core)', 
+                endpoint: 'http://localhost:3201/health' 
+            },
+        ];
+
+        let autoRefreshInterval = null;
+
+        // Check individual service
+        async function checkService(service) {
+            const startTime = performance.now();
+            
+            try {
+                const response = await fetch(service.endpoint, {
+                    method: 'GET',
+                    mode: 'cors',
+                });
+                
+                const endTime = performance.now();
+                const responseTime = Math.round(endTime - startTime);
+                
+                if (response.ok) {
+                    return {
+                        status: responseTime > 1000 ? 'slow' : 'healthy',
+                        responseTime: `${responseTime}ms`
+                    };
+                }
+                
+                return { status: 'down', responseTime: '-' };
+            } catch (error) {
+                return { status: 'down', responseTime: '-' };
+            }
+        }
+
+        // Check all services
+        async function checkAllServices() {
+            const grid = document.getElementById('servicesGrid');
+            
+            // Initialize cards if not present
+            if (grid.children.length === 0) {
+                services.forEach(service => {
+                    const card = document.createElement('service-status-card');
+                    card.setAttribute('name', service.name);
+                    card.setAttribute('port', service.port);
+                    card.setAttribute('status', 'checking');
+                    card.setAttribute('response-time', '...');
+                    card.setAttribute('language', service.language);
+                    card.id = `service-${service.port}`;
+                    grid.appendChild(card);
+                });
+            }
+
+            // Check all services in parallel
+            const results = await Promise.all(
+                services.map(service => checkService(service))
+            );
+
+            // Update cards with results
+            services.forEach((service, index) => {
+                const card = document.getElementById(`service-${service.port}`);
+                const result = results[index];
+                
+                card.setAttribute('status', result.status);
+                card.setAttribute('response-time', result.responseTime);
+            });
+
+            // Update stats
+            updateStats(results);
+        }
+
+        // Update statistics
+        function updateStats(results) {
+            const healthy = results.filter(r => r.status === 'healthy').length;
+            const slow = results.filter(r => r.status === 'slow').length;
+            const down = results.filter(r => r.status === 'down').length;
+
+            document.getElementById('healthyCount').textContent = healthy;
+            document.getElementById('slowCount').textContent = slow;
+            document.getElementById('downCount').textContent = down;
+        }
+
+        // Toggle auto-refresh
+        function toggleAutoRefresh() {
+            const statusEl = document.getElementById('autoRefreshStatus');
+            
+            if (autoRefreshInterval) {
+                clearInterval(autoRefreshInterval);
+                autoRefreshInterval = null;
+                statusEl.textContent = 'OFF';
+            } else {
+                autoRefreshInterval = setInterval(checkAllServices, 5000);
+                statusEl.textContent = 'ON (5s)';
+                checkAllServices();
+            }
+        }
+
+        // Initialize on page load
+        window.addEventListener('DOMContentLoaded', () => {
+            checkAllServices();
+        });
+    </script>
+</body>
+</html>
+

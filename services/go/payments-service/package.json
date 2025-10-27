@@ -1,0 +1,17 @@
+{
+  "name": "payments-service",
+  "version": "1.0.0",
+  "description": "PSP integration service built with Go for low-latency payment processing.",
+  "main": "index.js",
+  "scripts": {
+    "build": "go build -o payments-service main.go",
+    "start": "payments-service",
+    "dev": "go run main.go",
+    "lint": "golangci-lint run",
+    "check-types": "go build -o /dev/null main.go",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}

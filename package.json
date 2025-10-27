@@ -7,10 +7,12 @@
     "lint": "turbo run lint",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
     "check-types": "turbo run check-types",
+    "health-check": "npx -y serve@latest . -p 8080 -s",
     "docker:build": "turbo run docker:build",
     "docker:push": "turbo run docker:push",
     "k8s:dev:apply": "kubectl apply -k deploy/k8s/dev",
-    "k8s:dev:delete": "kubectl delete -k deploy/k8s/dev"
+    "k8s:dev:delete": "kubectl delete -k deploy/k8s/dev",
+    "kill:dotnet": "kill -9 $(lsof -ti:3200) $(lsof -ti:3201) 2>/dev/null || echo 'No .NET services running on ports 3200-3201'"
   },
   "devDependencies": {
     "prettier": "^3.6.2",
