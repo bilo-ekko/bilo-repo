@@ -153,3 +153,5 @@
 /Users/bilolwabona/Dev/bilo-repo/services/cs/analytics-service/obj/Debug/net9.0/analytics-service.genruntimeconfig.cache
 /Users/bilolwabona/Dev/bilo-repo/services/cs/analytics-service/obj/Debug/net9.0/ref/analytics-service.dll
 /Users/bilolwabona/Dev/bilo-repo/services/cs/analytics-service/obj/Debug/net9.0/analytics-service.sourcelink.json
+/Users/bilolwabona/Dev/bilo-repo/services/cs/analytics-service/bin/Debug/net9.0/SharedUtils.dll
+/Users/bilolwabona/Dev/bilo-repo/services/cs/analytics-service/bin/Debug/net9.0/SharedUtils.pdb

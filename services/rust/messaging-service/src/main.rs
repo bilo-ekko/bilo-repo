@@ -1,5 +1,6 @@
 use actix_cors::Cors;
 use actix_web::{get, web, App, HttpResponse, HttpServer, Responder};
+use bilo_shared_utils::{create_success_response, hello_from_shared_utils};
 use serde::{Deserialize, Serialize};
 use std::env;
 
@@ -51,6 +52,14 @@ async fn health_check() -> impl Responder {
     HttpResponse::Ok().json(response)
 }
 
+#[get("/shared-utils-demo")]
+async fn shared_utils_demo() -> impl Responder {
+    let message = hello_from_shared_utils("messaging-service");
+    let data = serde_json::json!({ "message": message });
+    let response = create_success_response(data);
+    HttpResponse::Ok().json(response)
+}
+
 #[actix_web::post("/messages")]
 async fn send_message(msg: web::Json<MessageRequest>) -> impl Responder {
     log::info!(
@@ -92,6 +101,7 @@ async fn main() -> std::io::Result<()> {
             .service(index)
             .service(health)
             .service(health_check)
+            .service(shared_utils_demo)
             .service(send_message)
     })
     .bind(&bind_address)?

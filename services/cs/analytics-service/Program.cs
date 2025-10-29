@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using BiloRepo.SharedUtils;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -33,6 +34,14 @@ app.MapControllers();
 
 // Health check endpoint
 app.MapGet("/health", () => new { status = "healthy", service = "analytics-service", stack = "C# (.NET Core)" });
+
+// Shared utils demo endpoint
+app.MapGet("/shared-utils-demo", () =>
+{
+    var message = SharedGreeter.HelloFromSharedUtils("analytics-service");
+    var response = ResponseFactory.CreateSuccess(new { message });
+    return Results.Ok(response);
+});
 
 // Analytics endpoints
 app.MapGet("/analytics/reports", () =>

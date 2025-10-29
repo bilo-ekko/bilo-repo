@@ -1679,6 +1679,16 @@
             "rid": "win"
           }
         }
+      },
+      "SharedUtils/1.0.0": {
+        "type": "project",
+        "framework": ".NETCoreApp,Version=v9.0",
+        "compile": {
+          "bin/placeholder/SharedUtils.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/SharedUtils.dll": {}
+        }
       }
     }
   },
@@ -5095,6 +5105,11 @@
         "system.windows.extensions.nuspec",
         "useSharedDesignerContext.txt"
       ]
+    },
+    "SharedUtils/1.0.0": {
+      "type": "project",
+      "path": "../../../packages/cs/SharedUtils/SharedUtils.csproj",
+      "msbuildProject": "../../../packages/cs/SharedUtils/SharedUtils.csproj"
     }
   },
   "projectFileDependencyGroups": {
@@ -5102,6 +5117,7 @@
       "Microsoft.EntityFrameworkCore >= 9.0.0",
       "Microsoft.EntityFrameworkCore.Design >= 9.0.0",
       "Microsoft.EntityFrameworkCore.SqlServer >= 9.0.0",
+      "SharedUtils >= 1.0.0",
       "Swashbuckle.AspNetCore >= 6.5.0"
     ]
   },
@@ -5129,7 +5145,11 @@
       "frameworks": {
         "net9.0": {
           "targetAlias": "net9.0",
-          "projectReferences": {}
+          "projectReferences": {
+            "/Users/bilolwabona/Dev/bilo-repo/packages/cs/SharedUtils/SharedUtils.csproj": {
+              "projectPath": "/Users/bilolwabona/Dev/bilo-repo/packages/cs/SharedUtils/SharedUtils.csproj"
+            }
+          }
         }
       },
       "warningProperties": {

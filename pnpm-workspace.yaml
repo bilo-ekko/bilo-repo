@@ -6,3 +6,8 @@ packages:
   - "services/ts/*"
   - "services/py/*"
   - "packages/*"
+  - "packages/ts/*"
+  - "packages/cs/*"
+  - "packages/go/*"
+  - "packages/py/*"
+  - "packages/rust/*"
