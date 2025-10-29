@@ -10,6 +10,7 @@ from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 import uvicorn
+from bilo_shared_utils import hello_from_shared_utils, create_success_response
 
 app = FastAPI(
     title="Calculator Service",
@@ -75,6 +76,14 @@ async def health_check():
         service="calculation-service",
         python_version=f"{sys.version_info.major}.{sys.version_info.minor}.{sys.version_info.micro}"
     )
+
+
+@app.get("/shared-utils-demo")
+async def shared_utils_demo():
+    """Shared utils demo endpoint"""
+    message = hello_from_shared_utils("calculator-service")
+    response = create_success_response({"message": message})
+    return response
 
 
 @app.post("/calculate")

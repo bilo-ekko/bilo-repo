@@ -4,6 +4,7 @@ import (
 	"log"
 	"os"
 
+	sharedutils "github.com/bilolwabona/bilo-repo/packages/go/shared-utils"
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/cors"
 	"github.com/gofiber/fiber/v2/middleware/logger"
@@ -22,6 +23,7 @@ func main() {
 
 	// Routes
 	app.Get("/health", healthCheck)
+	app.Get("/shared-utils-demo", sharedUtilsDemo)
 	app.Post("/funds/aggregate", aggregateFunds)
 	app.Post("/funds/reconcile", reconcileFunds)
 	app.Get("/funds/:id", getFundDetails)
@@ -42,6 +44,14 @@ func healthCheck(c *fiber.Ctx) error {
 		"service": "funds-service",
 		"stack":   "Go (Fiber)",
 	})
+}
+
+func sharedUtilsDemo(c *fiber.Ctx) error {
+	message := sharedutils.HelloFromSharedUtils("funds-service")
+	response := sharedutils.CreateSuccessResponse(fiber.Map{
+		"message": message,
+	})
+	return c.JSON(response)
 }
 
 func aggregateFunds(c *fiber.Ctx) error {

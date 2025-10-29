@@ -1,8 +1,13 @@
 module funds-service
 
-go 1.21
+go 1.23
 
-require github.com/gofiber/fiber/v2 v2.52.0
+require (
+	github.com/bilolwabona/bilo-repo/packages/go/shared-utils v0.0.0
+	github.com/gofiber/fiber/v2 v2.52.0
+)
+
+replace github.com/bilolwabona/bilo-repo/packages/go/shared-utils => ../../../packages/go/shared-utils
 
 require (
 	github.com/andybalholm/brotli v1.0.5 // indirect
