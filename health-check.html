@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -103,6 +104,7 @@
         }
     </style>
 </head>
+
 <body>
     <div class="container">
         <header>
@@ -143,10 +145,11 @@
             constructor() {
                 super();
                 this.attachShadow({ mode: 'open' });
+                this.isExpanded = false;
             }
 
             static get observedAttributes() {
-                return ['name', 'port', 'status', 'response-time', 'language'];
+                return ['name', 'port', 'status', 'response-time', 'language', 'features'];
             }
 
             connectedCallback() {
@@ -158,7 +161,7 @@
             }
 
             getStatusColor(status) {
-                switch(status) {
+                switch (status) {
                     case 'healthy': return '#10b981';
                     case 'slow': return '#f59e0b';
                     case 'down': return '#ef4444';
@@ -170,6 +173,8 @@
                 if (language.includes('TypeScript')) return { text: 'TS', class: 'typescript' };
                 if (language.includes('Go')) return { text: 'Go', class: 'go' };
                 if (language.includes('.NET')) return { text: 'C#', class: 'dotnet' };
+                if (language.includes('Rust')) return { text: 'RS', class: 'rust' };
+                if (language.includes('Python')) return { text: 'PY', class: 'python' };
                 return { text: 'Unknown', class: '' };
             }
 
@@ -179,9 +184,32 @@
                 const status = this.getAttribute('status') || 'checking';
                 const responseTime = this.getAttribute('response-time') || '-';
                 const language = this.getAttribute('language') || '';
+                const featuresAttr = this.getAttribute('features');
+                
+                let features = [];
+                try {
+                    features = featuresAttr ? JSON.parse(featuresAttr) : [];
+                } catch (e) {
+                    features = [];
+                }
 
                 const statusColor = this.getStatusColor(status);
                 const languageTag = this.getLanguageTag(language);
+                
+                const featuresHTML = features.length > 0 ? `
+                    <div class="features">
+                        <button class="features-toggle" id="featuresToggle">
+                            <svg class="chevron" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                            </svg>
+                        </button>
+                        <div class="features-content" id="featuresContent">
+                            <ul class="features-list">
+                                ${features.map(feature => `<li class="feature-tag">${feature}</li>`).join('')}
+                            </ul>
+                        </div>
+                    </div>
+                ` : '';
 
                 this.shadowRoot.innerHTML = `
                     <style>
@@ -252,6 +280,16 @@
                             color: white;
                         }
 
+                        .language-tag.rust {
+                            background: #ce422b;
+                            color: white;
+                        }
+
+                        .language-tag.python {
+                            background: #3776ab;
+                            color: white;
+                        }
+
                         .status-indicator {
                             width: 16px;
                             height: 16px;
@@ -298,6 +336,75 @@
                             color: ${statusColor};
                         }
 
+                        .features {
+                            position: relative;
+                            border-top: 1px solid #f3f4f6;
+                            margin: 0 -1.5rem -1.5rem;
+                            background: #fafbfc;
+                            border-radius: 0 0 12px 12px;
+                        }
+
+                        .features-toggle {
+                            width: 100%;
+                            padding: 0.5rem;
+                            border: none;
+                            background: transparent;
+                            cursor: pointer;
+                            display: flex;
+                            align-items: center;
+                            justify-content: center;
+                            transition: all 0.2s ease;
+                        }
+
+                        .features-toggle:hover {
+                            background: #f3f4f6;
+                        }
+
+                        .features-toggle:first-child:last-of-type {
+                            border-radius: 0 0 12px 12px;
+                        }
+
+                        .chevron {
+                            width: 16px;
+                            height: 16px;
+                            transition: transform 0.3s ease;
+                            color: #9ca3af;
+                        }
+
+                        .chevron.expanded {
+                            transform: rotate(180deg);
+                        }
+
+                        .features-content {
+                            max-height: 0;
+                            overflow: hidden;
+                            transition: max-height 0.3s ease;
+                            border-radius: 0 0 12px 12px;
+                        }
+
+                        .features-content.expanded {
+                            max-height: 300px;
+                            overflow-y: auto;
+                        }
+
+                        .features-list {
+                            display: flex;
+                            flex-wrap: wrap;
+                            gap: 0.5rem;
+                            list-style: none;
+                            padding: 0 1.5rem 0.75rem;
+                        }
+
+                        .feature-tag {
+                            font-size: 0.75rem;
+                            color: #6b7280;
+                            background: white;
+                            padding: 0.35rem 0.75rem;
+                            border-radius: 6px;
+                            border: 1px solid #e5e7eb;
+                            font-weight: 500;
+                        }
+
                         @keyframes pulse {
                             0%, 100% {
                                 opacity: 1;
@@ -329,8 +436,28 @@
                                 <div class="metric-value">${responseTime}</div>
                             </div>
                         </div>
+                        ${featuresHTML}
                     </div>
                 `;
+
+                // Add toggle functionality if features exist
+                if (features.length > 0) {
+                    const toggleBtn = this.shadowRoot.getElementById('featuresToggle');
+                    const content = this.shadowRoot.getElementById('featuresContent');
+                    const chevron = toggleBtn.querySelector('.chevron');
+                    
+                    toggleBtn.addEventListener('click', () => {
+                        this.isExpanded = !this.isExpanded;
+                        
+                        if (this.isExpanded) {
+                            content.classList.add('expanded');
+                            chevron.classList.add('expanded');
+                        } else {
+                            content.classList.remove('expanded');
+                            chevron.classList.remove('expanded');
+                        }
+                    });
+                }
             }
         }
 
@@ -339,77 +466,142 @@
 
         // Service configuration
         const services = [
-            { 
-                name: 'API Gateway', 
-                port: 3000, 
-                language: 'TypeScript (NestJS)', 
-                endpoint: 'http://localhost:3000/health' 
+            {
+                name: 'API Gateway',
+                port: 3000,
+                language: 'TypeScript (NestJS)',
+                endpoint: 'http://localhost:3000/health',
+                features: [
+                    'Service Discovery',
+                ]
             },
-            { 
-                name: 'Auth Service', 
-                port: 3001, 
-                language: 'TypeScript (NestJS)', 
-                endpoint: 'http://localhost:3001/health' 
+            {
+                name: 'Auth Service',
+                port: 3001,
+                language: 'TypeScript (NestJS)',
+                endpoint: 'http://localhost:3001/health',
+                features: [
+                    'AuthN/Z',
+                    'JWT/OAuth2',
+                    'API keys',
+                    'User/Org models',
+                ]
             },
-            { 
-                name: 'Calculation Service', 
-                port: 3002, 
-                language: 'TypeScript (NestJS)', 
-                endpoint: 'http://localhost:3002/health' 
+            {
+                name: 'Calculation Service',
+                port: 3002,
+                language: 'TypeScript (NestJS)',
+                endpoint: 'http://localhost:3002/health',
+                features: [
+                    'Carbon tracking',
+                    'Emission calculations',
+                    'Environmental impact metrics',
+                ]
             },
-            { 
-                name: 'Sessions Service', 
-                port: 3003, 
-                language: 'TypeScript (NestJS)', 
-                endpoint: 'http://localhost:3003/health' 
+            {
+                name: 'Sessions Service',
+                port: 3003,
+                language: 'TypeScript (NestJS)',
+                endpoint: 'http://localhost:3003/health',
+                features: [
+                    'ImpactPay sessions',
+                    'Checkout sessions',
+                ]
             },
-            { 
-                name: 'Projects Service', 
-                port: 3004, 
-                language: 'TypeScript (NestJS)', 
-                endpoint: 'http://localhost:3004/health' 
+            {
+                name: 'Projects Service',
+                port: 3004,
+                language: 'TypeScript (NestJS)',
+                endpoint: 'http://localhost:3004/health',
+                features: [
+                    'Project metadata',
+                    'Project assets & images'
+                ]
             },
-            { 
-                name: 'Equivalents Service', 
-                port: 3005, 
-                language: 'TypeScript (NestJS)', 
-                endpoint: 'http://localhost:3005/health' 
+            {
+                name: 'Equivalents Service',
+                port: 3005,
+                language: 'TypeScript (NestJS)',
+                endpoint: 'http://localhost:3005/health',
+                features: [
+                    'Tangible comparisons of impact',
+                ]
             },
-            { 
-                name: 'Messaging Service', 
-                port: 3009, 
-                language: 'TypeScript (NestJS)', 
-                endpoint: 'http://localhost:3009/health' 
+            {
+                name: 'Messaging Service',
+                port: 3009,
+                language: 'Rust',
+                endpoint: 'http://localhost:3009/health',
+                features: [
+                    'Emails',
+                    'Notifications',
+                    'SMS'
+                ]
             },
-            { 
-                name: 'Transactions Service', 
-                port: 3100, 
-                language: 'Go (Fiber)', 
-                endpoint: 'http://localhost:3100/health' 
+            {
+                name: 'Calculator Service',
+                port: 3010,
+                language: 'Python (FastAPI)',
+                endpoint: 'http://localhost:3010/health',
+                features: [
+                    'Carbon emission calculations',
+                    'Activity-based CO2 tracking',
+                    'Emission factors database'
+                ]
             },
-            { 
-                name: 'Funds Service', 
-                port: 3101, 
-                language: 'Go', 
-                endpoint: 'http://localhost:3101/health' 
+            {
+                name: 'Transactions Service',
+                port: 3100,
+                language: 'Go (Fiber)',
+                endpoint: 'http://localhost:3100/health',
+                features: [
+                    'All money movement records',
+                ]
             },
-            { 
-                name: 'Payments Service', 
-                port: 3102, 
-                language: 'Go', 
-                endpoint: 'http://localhost:3102/health' 
+            {
+                name: 'Funds Service',
+                port: 3101,
+                language: 'Go',
+                endpoint: 'http://localhost:3101/health',
+                features: [
+                    'Funds ledger',
+                    'Reconciliation',
+                    'Concurrent operations',
+                ]
+
             },
-            { 
-                name: 'Portfolio Service', 
-                port: 3200, 
-                language: 'C# (.NET Core)', 
-                endpoint: 'http://localhost:3200/health' 
+            {
+                name: 'Payments Service',
+                port: 3102,
+                language: 'Go',
+                endpoint: 'http://localhost:3102/health',
+                features: [
+                    'PSP integrations',
+                    'Low-latency parallel calls',
+                    'Batch payment processing',
+                ]
             },
-            { 
-                name: 'Analytics Service', 
-                port: 3201, 
-                language: 'C# (.NET Core)', 
-                endpoint: 'http://localhost:3201/health' 
+            {
+                name: 'Portfolio Service',
+                port: 3200,
+                language: 'C# (.NET Core)',
+                endpoint: 'http://localhost:3200/health',
+                features: [
+                    'Portfolio aggregation',
+                    'Reporting',
+                    'Typed DTOs',
+                ]
+            },
+            {
+                name: 'Analytics Service',
+                port: 3201,
+                language: 'C# (.NET Core)',
+                endpoint: 'http://localhost:3201/health',
+                features: [
+                    'Heavy reporting',
+                    'Aggregates',
+                    'Data pipelines',
+                ]
             },
         ];
 
@@ -418,23 +610,23 @@
         // Check individual service
         async function checkService(service) {
             const startTime = performance.now();
-            
+
             try {
                 const response = await fetch(service.endpoint, {
                     method: 'GET',
                     mode: 'cors',
                 });
-                
+
                 const endTime = performance.now();
                 const responseTime = Math.round(endTime - startTime);
-                
+
                 if (response.ok) {
                     return {
                         status: responseTime > 1000 ? 'slow' : 'healthy',
                         responseTime: `${responseTime}ms`
                     };
                 }
-                
+
                 return { status: 'down', responseTime: '-' };
             } catch (error) {
                 return { status: 'down', responseTime: '-' };
@@ -444,7 +636,7 @@
         // Check all services
         async function checkAllServices() {
             const grid = document.getElementById('servicesGrid');
-            
+
             // Initialize cards if not present
             if (grid.children.length === 0) {
                 services.forEach(service => {
@@ -454,6 +646,9 @@
                     card.setAttribute('status', 'checking');
                     card.setAttribute('response-time', '...');
                     card.setAttribute('language', service.language);
+                    if (service.features) {
+                        card.setAttribute('features', JSON.stringify(service.features));
+                    }
                     card.id = `service-${service.port}`;
                     grid.appendChild(card);
                 });
@@ -468,7 +663,7 @@
             services.forEach((service, index) => {
                 const card = document.getElementById(`service-${service.port}`);
                 const result = results[index];
-                
+
                 card.setAttribute('status', result.status);
                 card.setAttribute('response-time', result.responseTime);
             });
@@ -491,7 +686,7 @@
         // Toggle auto-refresh
         function toggleAutoRefresh() {
             const statusEl = document.getElementById('autoRefreshStatus');
-            
+
             if (autoRefreshInterval) {
                 clearInterval(autoRefreshInterval);
                 autoRefreshInterval = null;
@@ -509,5 +704,5 @@
         });
     </script>
 </body>
-</html>
 
+</html>

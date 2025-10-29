@@ -20,3 +20,4 @@ EXPOSE 3102
 
 CMD ["./payments-service"]
 
+

@@ -20,3 +20,4 @@ EXPOSE 3101
 
 CMD ["./funds-service"]
 
+

@@ -86,15 +86,16 @@ services:
     networks:
       - microservices
 
+  # Rust Services
   messaging-service:
     build:
-      context: ./services/ts/messaging-service
-      dockerfile: ../../Dockerfile.nestjs
+      context: ./services/rust/messaging-service
+      dockerfile: Dockerfile
     ports:
       - "3009:3009"
     environment:
       - PORT=3009
-      - NODE_ENV=production
+      - RUST_LOG=info
     networks:
       - microservices
 

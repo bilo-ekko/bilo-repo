@@ -6,7 +6,8 @@ This document outlines the microservices architecture for the platform, organize
 
 The platform consists of a polyglot microservices architecture with:
 - **1 API Gateway** (NestJS)
-- **6 TypeScript Services** (NestJS)
+- **5 TypeScript Services** (NestJS)
+- **1 Rust Service** (Actix-web)
 - **3 Go Services** (Fiber)
 - **2 .NET Services** (.NET Core)
 
@@ -17,15 +18,16 @@ services/
 ├── ts/                          # TypeScript/NestJS Services
 │   ├── auth-service/           # Port 3001
 │   ├── calculation-service/    # Port 3002
-│   ├── sessions-service/  # Port 3003
+│   ├── sessions-service/       # Port 3003
 │   ├── projects-service/       # Port 3004
-│   ├── equivalents-service/    # Port 3005
+│   └── equivalents-service/    # Port 3005
+├── rust/                        # Rust Services
 │   └── messaging-service/      # Port 3009
 ├── go/                          # Go Services
 │   ├── transactions-service/   # Port 3100
 │   ├── funds-service/          # Port 3101
 │   └── payments-service/       # Port 3102
-└── dotnet/                      # .NET Core Services
+└── cs/                          # .NET Core Services
     ├── portfolio-service/      # Port 3200
     └── analytics-service/      # Port 3201
 ```
@@ -164,7 +166,9 @@ cd services/ts/auth-service && pnpm install && pnpm dev
 cd services/ts/sessions-service && pnpm install && pnpm dev
 cd services/ts/projects-service && pnpm install && pnpm dev
 cd services/ts/equivalents-service && pnpm install && pnpm dev
-cd services/ts/messaging-service && pnpm install && pnpm dev
+
+# Rust Services
+cd services/rust/messaging-service && cargo run
 ```
 
 #### Start All Go Services

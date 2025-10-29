@@ -111,7 +111,6 @@ start_ts_services() {
         "sessions-service:3003"
         "projects-service:3004"
         "equivalents-service:3005"
-        "messaging-service:3009"
     )
     
     for service in "${services[@]}"; do
@@ -160,6 +159,29 @@ start_go_services() {
     done
 }
 
+# Start Rust Services
+start_rust_services() {
+    if ! command_exists cargo; then
+        print_error "Rust/Cargo is not installed. Skipping Rust services."
+        print_info "Install Rust from: https://rustup.rs/"
+        return
+    fi
+    
+    print_header "Starting Rust Services"
+    
+    services=(
+        "messaging-service:3009"
+    )
+    
+    for service in "${services[@]}"; do
+        IFS=':' read -r name port <<< "$service"
+        print_service "$name" "$port"
+        cd "services/rust/$name"
+        PORT=$port cargo run &
+        cd ../../..
+    done
+}
+
 # Start .NET Services
 start_dotnet_services() {
     if ! command_exists dotnet; then
@@ -195,6 +217,7 @@ show_usage() {
     echo "  gateway      Start only the API Gateway"
     echo "  typescript   Start only TypeScript/NestJS services"
     echo "  go           Start only Go services"
+    echo "  rust         Start only Rust services"
     echo "  dotnet       Start only .NET Core services"
     echo "  check        Check prerequisites only"
     echo "  help         Show this help message"
@@ -215,6 +238,9 @@ main() {
             start_ts_services
             sleep 2
             start_go_services
+            sleep 2
+            start_rust_services
+            
             sleep 2
             start_dotnet_services
             
@@ -242,6 +268,11 @@ main() {
         go)
             check_prerequisites
             start_go_services
+            wait
+            ;;
+        rust|rs)
+            check_prerequisites
+            start_rust_services
             wait
             ;;
         dotnet)

@@ -2,5 +2,6 @@ packages:
   - "apps/*"
   - "services/go/*"
   - "services/cs/*"
+  - "services/rust/*"
   - "services/ts/*"
   - "packages/*"

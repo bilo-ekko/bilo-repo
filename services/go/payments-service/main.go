@@ -73,16 +73,15 @@ func refundPayment(c *fiber.Ctx) error {
 func processBatchPayments(c *fiber.Ctx) error {
 	// TODO: Implement parallel PSP calls using goroutines (fan-out/fan-in)
 	var wg sync.WaitGroup
-	
+
 	// Example of concurrent processing pattern
 	results := make(chan string, 10)
-	
+
 	// This is where you'd fan-out to multiple PSPs
 	wg.Wait()
 	close(results)
-	
+
 	return c.JSON(fiber.Map{
 		"message": "Batch payments processed",
 	})
 }
-
