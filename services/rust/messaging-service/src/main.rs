@@ -1,3 +1,4 @@
+use actix_cors::Cors;
 use actix_web::{get, web, App, HttpResponse, HttpServer, Responder};
 use serde::{Deserialize, Serialize};
 use std::env;
@@ -6,8 +7,7 @@ use std::env;
 struct HealthResponse {
     ok: bool,
     service: String,
-    #[serde(rename = "thisIsRust")]
-    this_is_rust: bool,
+    stack: String,
 }
 
 #[derive(Serialize, Deserialize)]
@@ -36,7 +36,7 @@ async fn health() -> impl Responder {
     let response = HealthResponse {
         ok: true,
         service: "messaging-service".to_string(),
-        this_is_rust: true,
+        stack: "Rust".to_string(),
     };
     HttpResponse::Ok().json(response)
 }
@@ -46,7 +46,7 @@ async fn health_check() -> impl Responder {
     let response = HealthResponse {
         ok: true,
         service: "messaging-service".to_string(),
-        this_is_rust: true,
+        stack: "Rust".to_string(),
     };
     HttpResponse::Ok().json(response)
 }
@@ -80,7 +80,15 @@ async fn main() -> std::io::Result<()> {
     log::info!("🚀 Starting Messaging Service (Rust) on {}", bind_address);
 
     HttpServer::new(|| {
+        // Configure CORS to allow all origins (for development)
+        let cors = Cors::default()
+            .allow_any_origin()
+            .allow_any_method()
+            .allow_any_header()
+            .max_age(3600);
+
         App::new()
+            .wrap(cors)
             .service(index)
             .service(health)
             .service(health_check)

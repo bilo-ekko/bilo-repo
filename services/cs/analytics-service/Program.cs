@@ -32,7 +32,7 @@ app.UseAuthorization();
 app.MapControllers();
 
 // Health check endpoint
-app.MapGet("/health", () => new { status = "healthy", service = "analytics-service" });
+app.MapGet("/health", () => new { status = "healthy", service = "analytics-service", stack = "C# (.NET Core)" });
 
 // Analytics endpoints
 app.MapGet("/analytics/reports", () =>

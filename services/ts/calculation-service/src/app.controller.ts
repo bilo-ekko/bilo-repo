@@ -6,8 +6,12 @@ export class AppController {
   constructor(private readonly appService: AppService) {}
 
   @Get('/health')
-  health() {
-    return { ok: true, service: 'calculation-service' };
+  getHealth(): { ok: boolean; service: string; stack: string } {
+    return {
+      ok: true,
+      service: 'calculation-service',
+      stack: 'TypeScript (NestJS)',
+    };
   }
 
   // example domain-y endpoint (stub): GET /calculation/echo?value=123

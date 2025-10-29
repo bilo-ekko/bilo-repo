@@ -32,7 +32,7 @@ app.UseAuthorization();
 app.MapControllers();
 
 // Health check endpoint
-app.MapGet("/health", () => new { status = "healthy", service = "portfolio-service" });
+app.MapGet("/health", () => new { status = "healthy", service = "portfolio-service", stack = "C# (.NET Core)" });
 
 // Portfolio endpoints
 app.MapGet("/portfolios/{id}", (string id) =>

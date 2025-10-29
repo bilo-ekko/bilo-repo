@@ -4,4 +4,5 @@ packages:
   - "services/cs/*"
   - "services/rust/*"
   - "services/ts/*"
+  - "services/py/*"
   - "packages/*"

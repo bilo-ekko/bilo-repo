@@ -40,6 +40,7 @@ func healthCheck(c *fiber.Ctx) error {
 	return c.JSON(fiber.Map{
 		"status":  "healthy",
 		"service": "transactions-service",
+		"stack":   "Go (Fiber)",
 	})
 }
 

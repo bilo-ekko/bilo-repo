@@ -1,0 +1,16 @@
+{
+  "name": "calculator-service",
+  "version": "1.0.0",
+  "description": "Python FastAPI calculation service for carbon emissions",
+  "private": true,
+  "scripts": {
+    "dev": "./dev.sh",
+    "start": "python3 main.py",
+    "setup": "python3 -m venv venv && source venv/bin/activate && python3 -m pip install --upgrade pip && python3 -m pip install -r requirements.txt",
+    "clean": "rm -rf venv __pycache__ .pytest_cache",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": ["python", "fastapi", "carbon", "calculations"],
+  "author": "",
+  "license": "UNLICENSED"
+}

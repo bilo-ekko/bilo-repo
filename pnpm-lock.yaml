@@ -265,6 +265,8 @@ importers:
 
   services/go/transactions-service: {}
 
+  services/py/calculation-service: {}
+
   services/rust/messaging-service: {}
 
   services/ts/auth-service:

@@ -11,7 +11,11 @@ export class AppController {
   }
 
   @Get('/health')
-  health() {
-    return { ok: true, service: 'projects-service' };
+  getHealth(): { ok: boolean; service: string; stack: string } {
+    return {
+      ok: true,
+      service: 'projects-service',
+      stack: 'TypeScript (NestJS)',
+    };
   }
 }
