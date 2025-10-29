@@ -123,10 +123,10 @@ importers:
     devDependencies:
       '@repo/eslint-config':
         specifier: workspace:*
-        version: link:../../packages/eslint-config
+        version: link:../../packages/ts/eslint-config
       '@repo/typescript-config':
         specifier: workspace:*
-        version: link:../../packages/typescript-config
+        version: link:../../packages/ts/typescript-config
       '@types/node':
         specifier: ^22.15.3
         version: 22.15.3
@@ -160,10 +160,10 @@ importers:
     devDependencies:
       '@repo/eslint-config':
         specifier: workspace:*
-        version: link:../../packages/eslint-config
+        version: link:../../packages/ts/eslint-config
       '@repo/typescript-config':
         specifier: workspace:*
-        version: link:../../packages/typescript-config
+        version: link:../../packages/ts/typescript-config
       '@types/node':
         specifier: ^22.15.3
         version: 22.15.3
@@ -182,7 +182,13 @@ importers:
 
   packages/cs/SharedUtils: {}
 
-  packages/eslint-config:
+  packages/go/shared-utils: {}
+
+  packages/py/shared-utils: {}
+
+  packages/rust/shared-utils: {}
+
+  packages/ts/eslint-config:
     devDependencies:
       '@eslint/js':
         specifier: ^9.34.0
@@ -218,12 +224,6 @@ importers:
         specifier: ^8.40.0
         version: 8.40.0(eslint@9.34.0)(typescript@5.9.2)
 
-  packages/go/shared-utils: {}
-
-  packages/py/shared-utils: {}
-
-  packages/rust/shared-utils: {}
-
   packages/ts/shared-utils:
     devDependencies:
       '@types/node':
@@ -233,7 +233,7 @@ importers:
         specifier: ^5.0.0
         version: 5.9.2
 
-  packages/typescript-config: {}
+  packages/ts/typescript-config: {}
 
   packages/ui:
     dependencies:
@@ -246,10 +246,10 @@ importers:
     devDependencies:
       '@repo/eslint-config':
         specifier: workspace:*
-        version: link:../eslint-config
+        version: link:../ts/eslint-config
       '@repo/typescript-config':
         specifier: workspace:*
-        version: link:../typescript-config
+        version: link:../ts/typescript-config
       '@types/node':
         specifier: ^22.15.3
         version: 22.15.3
@@ -3342,6 +3342,7 @@ packages:
 
   loose-envify@1.4.0:
     resolution: {integrity: sha512-lyuxPGr/Wfhrlem2CL/UcnUc1zcqKAImBDzukY7Y5F/yQiNdko6+fRLevlw1HgMySw7f611UIY408EtxRSoK3Q==}
+    hasBin: true
 
   lru-cache@10.4.3:
     resolution: {integrity: sha512-JNAzZcXrCt42VGLuYz0zfAzDfAvJWW6AfYlDBQyDV5DClI2m5sAmK+OIO7s59XfsRsWHp02jAJrRadPRGTt6SQ==}
@@ -3819,6 +3820,7 @@ packages:
 
   resolve@2.0.0-next.5:
     resolution: {integrity: sha512-U7WjGVG9sH8tvjW5SmGbQuui75FiyjAX72HX15DwBBwF9dNiQZRQAg9nnPhYy+TUnE0+VcrttuvNI8oSxZcocA==}
+    hasBin: true
 
   restore-cursor@3.1.0:
     resolution: {integrity: sha512-l+sSefzHpj5qimhFSE5a8nufZYAM3sBSVMAPtYkmC+4EH2anSGaEMXSD0izRQbu9nfyQ9y5JrVmp7E8oZrUjvA==}

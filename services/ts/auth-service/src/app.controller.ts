@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
+/* eslint-disable @typescript-eslint/no-unsafe-call */
 import { Controller, Get } from '@nestjs/common';
 import { AppService } from './app.service';
 import {
@@ -26,7 +28,7 @@ export class AppController {
 
   @Get('/shared-utils-demo')
   getSharedUtilsDemo(): ServiceResponse<{ message: string }> {
-    const message = helloFromSharedUtils('auth-service');
-    return createSuccessResponse({ message });
+    const message: string = helloFromSharedUtils('auth-service');
+    return createSuccessResponse<{ message: string }>({ message });
   }
 }
