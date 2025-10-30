@@ -452,25 +452,27 @@
                 const frameworkUrl = framework ? this.getFrameworkUrl(framework) : null;
                 const languageUrl = language ? this.getLanguageUrl(language) : null;
 
+                // Calculate stats from response time data
+                const chartData = getResponseTimeData(name);
+                const stats = calculateStats(chartData);
+
+                // Get status info using utility functions
                 let statusClass = 'status-checking';
                 let statusText = 'Checking...';
-                let statusIcon = '<i class="fa-regular fa-circle-check"></i>';
+                let statusIcon = getStatusIcon(status || 'checking');
                 let statusIndicatorIcon = '<i class="fa-solid fa-spinner fa-spin"></i>';
 
                 if (status === 'healthy') {
                     statusClass = 'status-healthy';
                     statusText = 'Healthy';
-                    statusIcon = '<i class="fa-regular fa-circle-check"></i>';
                     statusIndicatorIcon = '<i class="fa-solid fa-circle-check"></i>';
                 } else if (status === 'slow') {
                     statusClass = 'status-slow';
                     statusText = 'Slow';
-                    statusIcon = '<i class="fa-regular fa-triangle-exclamation"></i>';
                     statusIndicatorIcon = '<i class="fa-solid fa-triangle-exclamation"></i>';
                 } else if (status === 'down') {
                     statusClass = 'status-down';
                     statusText = 'Down';
-                    statusIcon = '<i class="fa-regular fa-circle-xmark"></i>';
                     statusIndicatorIcon = '<i class="fa-solid fa-circle-xmark"></i>';
                 }
 
@@ -771,6 +773,20 @@
                             color: white;
                         }
 
+                        .chart-container {
+                            margin-top: 12px;
+                            padding: 8px;
+                            background: var(--bg-secondary);
+                            border-radius: 6px;
+                            border: 1px solid var(--border-primary);
+                        }
+
+                        .chart-container canvas {
+                            width: 100%;
+                            height: 60px;
+                            border-radius: 4px;
+                        }
+
                         @keyframes pulse {
                             0%, 100% {
                                 opacity: 1;
@@ -797,14 +813,36 @@
                             </div>
                             <div class="status-indicator">${statusIndicatorIcon}</div>
                         </div>
-                        <div class="card-body">
-                            <div class="metric">
-                                <div class="metric-label">Status</div>
-                                <div class="status-badge">${statusIcon} ${statusText}</div>
+                        <div class="card-body" style="display: flex; flex-direction: column; gap: 0.5rem;">
+                            <div style="display: flex; flex-direction: row; gap: 0.5rem; justify-content: space-between;">
+                                <div class="metric">
+                                    <div class="metric-label">Status</div>
+                                    <div class="status-badge">
+                                        ${statusIcon}
+                                        ${statusText}
+                                    </div>
+                                </div>
+                                <div class="metric">
+                                    <div class="metric-label">Response</div>
+                                    <div class="metric-value">${responseTime}</div>
+                                </div>
                             </div>
-                            <div class="metric">
-                                <div class="metric-label">Response</div>
-                                <div class="metric-value">${responseTime}</div>
+                            <div style="display: flex; flex-direction: row; gap: 0.5rem; justify-content: space-between;">
+                                <div class="metric">
+                                    <div class="metric-label"><i class="fa-solid fa-arrow-down"></i> Min</div>
+                                    <div class="metric-value">${stats.min}ms</div>
+                                </div>
+                                <div class="metric">
+                                    <div class="metric-label"><i class="fa-solid fa-chart-line"></i> Avg</div>
+                                    <div class="metric-value">${stats.avg}ms</div>
+                                </div>
+                                <div class="metric">
+                                    <div class="metric-label"><i class="fa-solid fa-arrow-up"></i> Max</div>
+                                    <div class="metric-value">${stats.max}ms</div>
+                                </div>
+                            </div>
+                            <div class="chart-container">
+                                <canvas id="chart-${port}"></canvas>
                             </div>
                         </div>
                         ${featuresHTML}
@@ -829,11 +867,29 @@
                         }
                     });
                 }
+
+                // Render response time chart
+                setTimeout(() => {
+                    const chartData = getResponseTimeData(name);
+                    const canvas = this.shadowRoot.getElementById(`chart-${port}`);
+                    const currentStatus = status || 'checking';
+                    if (canvas) {
+                        renderResponseTimeChartOnCanvas(canvas, chartData, name, currentStatus);
+                    } else {
+                        console.log(`Canvas not found in shadow DOM: chart-${port}`);
+                    }
+                }, 100); // Small delay to ensure canvas is rendered
             }
         }
 
         // Register the web component
         customElements.define('service-status-card', ServiceStatusCard);
+
+        // Data collection configuration
+        const REFRESH_INTERVAL = 2000;
+        const DATA_POINTS = 20;
+        let responseTimeData = {}; // Store response time data for each service
+        let isAutoRefreshActive = false;
 
         // Web applications configuration
         const webapps = [
@@ -916,18 +972,6 @@
                 ]
             },
             {
-                name: 'Webhook Service',
-                port: 3002,
-                language: 'TypeScript (NestJS)',
-                endpoint: 'http://localhost:3002/health',
-                url: 'http://localhost:3002',
-                features: [
-                    'Webhook handling',
-                    'Event processing',
-                    'External integrations',
-                ]
-            },
-            {
                 name: 'Sessions Service',
                 port: 3003,
                 language: 'TypeScript (NestJS)',
@@ -947,16 +991,6 @@
                 features: [
                     'Project metadata',
                     'Project assets & images'
-                ]
-            },
-            {
-                name: 'Equivalents Service',
-                port: 3005,
-                language: 'TypeScript (NestJS)',
-                endpoint: 'http://localhost:3005/health',
-                url: 'http://localhost:3005',
-                features: [
-                    'Tangible comparisons of impact',
                 ]
             },
             {
@@ -1032,18 +1066,6 @@
 
             },
             {
-                name: 'Payments Service',
-                port: 3102,
-                language: 'Go',
-                endpoint: 'http://localhost:3102/health',
-                url: 'http://localhost:3102',
-                features: [
-                    'PSP integrations',
-                    'Low-latency parallel calls',
-                    'Batch payment processing',
-                ]
-            },
-            {
                 name: 'Portfolio Service',
                 port: 3200,
                 language: 'C# (.NET Core)',
@@ -1070,6 +1092,201 @@
         ];
 
         let autoRefreshInterval = null;
+
+        // Helper function to get service folder name from service name
+        function getServiceFolderName(serviceName) {
+            const folderMap = {
+                'API Gateway': 'api-gateway',
+                'Auth Service': 'auth-service',
+                'Sessions Service': 'sessions-service',
+                'Projects Service': 'projects-service',
+                'Messaging Service': 'messaging-service',
+                'Users Service': 'users-service',
+                'Calculator Service': 'calculator-service',
+                'Analytics Service': 'analytics-service',
+                'Transactions Service': 'transactions-service',
+                'Funds Service': 'funds-service',
+                'Portfolio Service': 'portfolio-service',
+                'Reporting Service': 'reporting-service',
+                'Web': 'web',
+                'Docs': 'docs',
+                'Dashboard': 'web-dashboard',
+                'Checkout': 'web-checkout',
+                'Post-Purchase': 'web-postpurchase'
+            };
+            return folderMap[serviceName] || serviceName.toLowerCase().replace(/\s+/g, '-');
+        }
+
+        // Initialize data arrays for all services
+        function initializeDataArrays() {
+            // Initialize for webapps
+            webapps.forEach(webapp => {
+                const folderName = getServiceFolderName(webapp.name);
+                responseTimeData[folderName] = new Array(DATA_POINTS).fill(0);
+            });
+            
+            // Initialize for services
+            services.forEach(service => {
+                const folderName = getServiceFolderName(service.name);
+                responseTimeData[folderName] = new Array(DATA_POINTS).fill(0);
+            });
+        }
+
+        // Add new response time data point
+        function addDataPoint(serviceName, responseTime) {
+            if (!isAutoRefreshActive) return;
+            
+            const folderName = getServiceFolderName(serviceName);
+            if (responseTimeData[folderName]) {
+                // Remove first element and add new one at the end
+                responseTimeData[folderName].shift();
+                responseTimeData[folderName].push(responseTime);
+            }
+        }
+
+        // Get response time data for a specific service (for debugging/charting)
+        function getResponseTimeData(serviceName) {
+            const folderName = getServiceFolderName(serviceName);
+            return responseTimeData[folderName] || [];
+        }
+
+        // Calculate statistics from response time data
+        function calculateStats(data) {
+            if (!data || data.length === 0) {
+                return { min: 0, max: 0, avg: 0 };
+            }
+            
+            // Filter out zero values (no data points)
+            const validData = data.filter(val => val > 0);
+            
+            if (validData.length === 0) {
+                return { min: 0, max: 0, avg: 0 };
+            }
+            
+            const min = Math.min(...validData);
+            const max = Math.max(...validData);
+            const avg = Math.round(validData.reduce((sum, val) => sum + val, 0) / validData.length);
+            
+            return { min, max, avg };
+        }
+
+        // Get all response time data (for debugging)
+        function getAllResponseTimeData() {
+            return responseTimeData;
+        }
+
+        // Get status color utility function
+        function getStatusColor(status) {
+            switch(status) {
+                case 'healthy':
+                    return '#10b981'; // green
+                case 'slow':
+                    return '#f59e0b'; // orange/yellow
+                case 'down':
+                    return '#ef4444'; // red
+                case 'checking':
+                default:
+                    return '#6b7280'; // gray
+            }
+        }
+
+        // Get status icon utility function (matches accordion style)
+        function getStatusIcon(status) {
+            switch(status) {
+                case 'healthy':
+                    return '<i class="fa-regular fa-circle-check"></i>';
+                case 'slow':
+                    return '<i class="fa-regular fa-triangle-exclamation"></i>';
+                case 'down':
+                    return '<i class="fa-regular fa-circle-xmark"></i>';
+                case 'checking':
+                default:
+                    return '<i class="fa-solid fa-spinner fa-spin"></i>';
+            }
+        }
+
+        // Render line chart for response time data (by canvas element)
+        function renderResponseTimeChartOnCanvas(canvas, data, serviceName, status = 'checking') {
+            if (!canvas) {
+                console.log(`Canvas element is null for ${serviceName}`);
+                return;
+            }
+            
+            // Set canvas dimensions to match its displayed size
+            const container = canvas.parentElement;
+            const containerWidth = container ? container.clientWidth - 16 : 400; // Subtract padding
+            canvas.width = containerWidth;
+            canvas.height = 60;
+        
+            
+            const ctx = canvas.getContext('2d');
+            const width = canvas.width;
+            const height = canvas.height;
+            
+            // Get status color for chart
+            const chartColor = getStatusColor(status);
+            
+            // Clear canvas
+            ctx.clearRect(0, 0, width, height);
+            
+            // If no data or all zeros, show empty chart
+            if (!data || data.length === 0 || data.every(val => val === 0)) {
+                ctx.fillStyle = '#666';
+                ctx.font = '12px -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif';
+                ctx.textAlign = 'center';
+                ctx.fillText('No data', width / 2, height / 2);
+                console.log(`No data for ${serviceName}, showing empty chart`);
+                return;
+            }
+            
+            // Find min and max values for scaling
+            const maxValue = Math.max(...data);
+            const minValue = Math.min(...data);
+            const range = maxValue - minValue || 1; // Avoid division by zero
+            
+            // Chart dimensions
+            const padding = 8;
+            const chartWidth = width - (padding * 2);
+            const chartHeight = height - (padding * 2);
+            
+            // Draw line chart
+            ctx.strokeStyle = chartColor;
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            
+            data.forEach((value, index) => {
+                const x = padding + (chartWidth / (data.length - 1)) * index;
+                const y = height - padding - ((value - minValue) / range) * chartHeight;
+                
+                if (index === 0) {
+                    ctx.moveTo(x, y);
+                } else {
+                    ctx.lineTo(x, y);
+                }
+            });
+            
+            ctx.stroke();
+            
+            // Draw data points
+            ctx.fillStyle = chartColor;
+            data.forEach((value, index) => {
+                const x = padding + (chartWidth / (data.length - 1)) * index;
+                const y = height - padding - ((value - minValue) / range) * chartHeight;
+                
+                ctx.beginPath();
+                ctx.arc(x, y, 2, 0, 2 * Math.PI);
+                ctx.fill();
+            });
+            
+            // Draw value labels on the right
+            if (maxValue > 0) {
+                ctx.fillStyle = 'var(--text-secondary)';
+                ctx.font = '10px -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif';
+                ctx.textAlign = 'left';
+                ctx.fillText(`${maxValue}ms`, width - 40, padding + 12);
+                ctx.fillText(`${minValue}ms`, width - 40, height - padding);
+            }
+        }
 
         // Toggle accordion
         function toggleAccordion(section) {
@@ -1121,12 +1338,17 @@
                 // With no-cors mode, response.type is 'opaque' and response.ok might not be accurate
                 // So we check response.type for opaque responses
                 if (response.type === 'opaque' || response.ok) {
+                    // Add data point for charting if auto-refresh is active
+                    addDataPoint(item.name, responseTime);
+                    
                     return {
                         status: responseTime > 1000 ? 'slow' : 'healthy',
                         responseTime: `${responseTime}ms`
                     };
                 }
 
+                // Add data point even for failed requests (0ms)
+                addDataPoint(item.name, 0);
                 return { status: 'down', responseTime: '-' };
             } catch (error) {
                 // If fetch fails completely (network error), try image loading for webapps
@@ -1158,15 +1380,21 @@
                         const endTime = performance.now();
                         const responseTime = Math.round(endTime - startTime);
                         
+                        // Add data point for charting if auto-refresh is active
+                        addDataPoint(item.name, responseTime);
+                        
                         return {
                             status: responseTime > 1000 ? 'slow' : 'healthy',
                             responseTime: `${responseTime}ms`
                         };
                     } catch (e) {
                         // All methods failed, service is down
+                        addDataPoint(item.name, 0);
                     }
                 }
                 
+                // Add data point even for failed requests (0ms)
+                addDataPoint(item.name, 0);
                 return { status: 'down', responseTime: '-' };
             }
         }
@@ -1205,6 +1433,13 @@
 
                 card.setAttribute('status', result.status);
                 card.setAttribute('response-time', result.responseTime);
+                
+                // Update chart
+                const chartData = getResponseTimeData(webapp.name);
+                const canvas = card.shadowRoot?.getElementById(`chart-${webapp.port}`);
+                if (canvas) {
+                    renderResponseTimeChartOnCanvas(canvas, chartData, webapp.name, result.status);
+                }
             });
 
             // Update stats
@@ -1245,6 +1480,13 @@
 
                 card.setAttribute('status', result.status);
                 card.setAttribute('response-time', result.responseTime);
+                
+                // Update chart
+                const chartData = getResponseTimeData(service.name);
+                const canvas = card.shadowRoot?.getElementById(`chart-${service.port}`);
+                if (canvas) {
+                    renderResponseTimeChartOnCanvas(canvas, chartData, service.name, result.status);
+                }
             });
 
             // Update stats
@@ -1287,15 +1529,26 @@
             const autoRefreshIcon = document.getElementById('autoRefreshIcon');
 
             if (autoRefreshInterval) {
+                // Stop auto-refresh
                 clearInterval(autoRefreshInterval);
                 autoRefreshInterval = null;
+                isAutoRefreshActive = false;
                 autoRefreshBtn.classList.remove('active');
                 autoRefreshIcon.className = 'fa-solid fa-circle-play';
+                
+                console.log('Auto-refresh stopped. Data collection paused.');
+                console.log('Current response time data:', responseTimeData);
             } else {
-                autoRefreshInterval = setInterval(checkAllItems, 3000);
+                // Start auto-refresh
+                isAutoRefreshActive = true;
+                initializeDataArrays(); // Initialize data arrays with zeros
+                autoRefreshInterval = setInterval(checkAllItems, REFRESH_INTERVAL);
                 autoRefreshBtn.classList.add('active');
                 autoRefreshIcon.className = 'fa-solid fa-circle-stop';
                 checkAllItems();
+                
+                console.log('Auto-refresh started. Data collection active.');
+                console.log('Initialized data arrays:', responseTimeData);
             }
         }
 
