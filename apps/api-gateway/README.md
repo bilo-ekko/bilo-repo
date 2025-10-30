@@ -75,7 +75,7 @@ pnpm start:prod
 - `GET /portfolios/:id` - Get portfolio
 - `GET /portfolios/:id/report` - Get portfolio report
 
-#### Analytics (→ Analytics Service :3201 - .NET)
+#### Analytics (→ Reporting Service :3201 - .NET)
 - `GET /analytics/reports` - Get analytics reports
 
 #### Messaging (→ Messaging Service :3009)

@@ -1,0 +1,22 @@
+{
+  "name": "users-service",
+  "version": "0.0.1",
+  "description": "Users service written in Rust with Actix-web",
+  "author": "",
+  "private": true,
+  "license": "UNLICENSED",
+  "scripts": {
+    "build": "cargo build --release",
+    "dev": "./dev.sh",
+    "dev:simple": "./start.sh",
+    "dev:check": "$HOME/.cargo/bin/bacon",
+    "start": "./start.sh",
+    "start:prod": "cargo run --release",
+    "test": "cargo test",
+    "test:watch": "$HOME/.cargo/bin/bacon test",
+    "lint": "cargo clippy -- -D warnings",
+    "format": "cargo fmt",
+    "clean": "cargo clean"
+  }
+}
+

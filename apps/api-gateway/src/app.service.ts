@@ -16,11 +16,11 @@ export class AppService {
       language: 'TypeScript (NestJS)',
       purpose: 'AuthN/Z, JWT/OAuth2, API keys, user/org models',
     },
-    'calculation-service': {
-      name: 'Calculation Service',
+    'webhook-service': {
+      name: 'Webhook Service',
       baseUrl: 'http://localhost:3002',
       language: 'TypeScript (NestJS)',
-      purpose: 'Carbon tracking and calculations',
+      purpose: 'Webhook handling and event processing',
     },
     'sessions-service': {
       name: 'Sessions Service',
@@ -70,8 +70,8 @@ export class AppService {
       language: 'C# (.NET Core)',
       purpose: 'Portfolio aggregation, reporting, typed DTOs',
     },
-    'analytics-service': {
-      name: 'Analytics Service',
+    'reporting-service': {
+      name: 'Reporting Service',
       baseUrl: 'http://localhost:3201',
       language: 'C# (.NET Core)',
       purpose: 'Heavy reporting, aggregates, data pipelines',

@@ -144,7 +144,9 @@ bilo-repo/
 ### Apps (`/apps`)
 
 Frontend applications built with modern frameworks:
-- **Next.js applications** for documentation and web interfaces
+- **Next.js applications** (docs, web) for documentation and web interfaces
+- **SvelteKit application** (web-checkout) for checkout experiences
+- **Vue.js application** (web-postpurchase) for post-purchase portal
 - Shared UI components and configurations
 
 ### Packages (`/packages`)
@@ -450,15 +452,17 @@ pnpm build
 
 ## Service Ports
 
-By default, services run on the following ports:
+By default, services and apps run on the following ports:
 
-| Port Range | Stack      | Example                 |
-|------------|------------|-------------------------|
-| 3000-3005  | TypeScript | auth-service (3001)     |
-| 3009       | Rust       | messaging-service       |
-| 3010       | Python     | calculator-service      |
-| 3101-3103  | Go         | funds-service (3101)    |
-| 3201-3202  | C#         | analytics-service (3201)|
+| Port Range | Type       | Example                    |
+|------------|------------|----------------------------|
+| 3000-3005  | TypeScript | auth-service (3001)        |
+| 3006       | SvelteKit  | web-checkout               |
+| 3007       | Vue.js     | web-postpurchase           |
+| 3009       | Rust       | messaging-service          |
+| 3010       | Python     | calculator-service         |
+| 3101-3103  | Go         | funds-service (3101)       |
+| 3201-3202  | C#         | reporting-service (3201)   |
 
 Ports can be customized via environment variables (`PORT=3099`).
 

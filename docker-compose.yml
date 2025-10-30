@@ -21,7 +21,7 @@ services:
       - funds-service
       - payments-service
       - portfolio-service
-      - analytics-service
+      - reporting-service
     networks:
       - microservices
 
@@ -38,9 +38,9 @@ services:
     networks:
       - microservices
 
-  calculation-service:
+  webhook-service:
     build:
-      context: ./services/ts/calculation-service
+      context: ./services/ts/webhook-service
       dockerfile: Dockerfile
     ports:
       - "3002:3002"
@@ -148,9 +148,9 @@ services:
     networks:
       - microservices
 
-  analytics-service:
+  reporting-service:
     build:
-      context: ./services/cs/analytics-service
+      context: ./services/cs/reporting-service
       dockerfile: Dockerfile
     ports:
       - "3201:3201"

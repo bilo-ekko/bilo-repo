@@ -246,7 +246,7 @@ packages/<stack>/<package-name>/
 
 4. Restore: `dotnet restore`
 
-**Example Service**: `services/cs/analytics-service`
+**Example Service**: `services/cs/reporting-service`
 
 ---
 
@@ -435,7 +435,7 @@ cd services/ts/auth-service && pnpm dev
 
 **C#:**
 ```bash
-cd services/cs/analytics-service && dotnet run
+cd services/cs/reporting-service && dotnet run
 ```
 
 **Go:**
@@ -458,7 +458,7 @@ cd services/rust/messaging-service && cargo run
 | Service              | Port | Stack      |
 |---------------------|------|------------|
 | auth-service        | 3001 | TypeScript |
-| analytics-service   | 3201 | C#         |
+| reporting-service   | 3201 | C#         |
 | funds-service       | 3101 | Go         |
 | calculator-service  | 3010 | Python     |
 | messaging-service   | 3009 | Rust       |
@@ -715,7 +715,7 @@ export PORT=3099
 
 **Services Integrated:**
 - `services/ts/auth-service` - TypeScript demo
-- `services/cs/analytics-service` - C# demo
+- `services/cs/reporting-service` - C# demo
 - `services/go/funds-service` - Go demo
 - `services/py/calculator-service` - Python demo
 - `services/rust/messaging-service` - Rust demo

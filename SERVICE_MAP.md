@@ -46,7 +46,7 @@
 | Port | Service | Purpose |
 |------|---------|---------|
 | 3001 | Auth Service | Authentication & Authorization |
-| 3002 | Calculation Service | Carbon tracking & calculations |
+| 3002 | Webhook Service | Webhook handling & event processing |
 | 3003 | Impact Calculation Service | Environmental impact calculations |
 | 3004 | Projects Service | Project metadata & CRUD |
 | 3005 | Equivalents Service | Numeric conversions & lookups |
@@ -63,7 +63,7 @@
 | Port | Service | Purpose |
 |------|---------|---------|
 | 3200 | Portfolio Service | Portfolio aggregation & reporting |
-| 3201 | Analytics Service | Heavy reporting & data pipelines |
+| 3201 | Reporting Service | Heavy reporting & data pipelines |
 
 ## Service Communication Flow
 
@@ -81,7 +81,7 @@ API Gateway :3000
     ├─→ /funds/*         → Funds Service :3101 (Go)
     ├─→ /payments/*      → Payments Service :3102 (Go)
     ├─→ /portfolios/*    → Portfolio Service :3200 (.NET)
-    ├─→ /analytics/*     → Analytics Service :3201 (.NET)
+    ├─→ /analytics/*     → Reporting Service :3201 (.NET)
     └─→ /messages/*      → Messaging Service :3009
 ```
 
@@ -127,7 +127,7 @@ API Gateway :3000
 
 ### Data-Intensive Services (.NET)
 - **Portfolio :3200** - LINQ-based data shaping
-- **Analytics :3201** - Compute-intensive aggregations
+- **Reporting :3201** - Compute-intensive aggregations
 
 ## Health Check Endpoints
 
@@ -152,7 +152,7 @@ curl http://localhost:3102/health  # Payments
 
 # .NET Services
 curl http://localhost:3200/health  # Portfolio
-curl http://localhost:3201/health  # Analytics
+curl http://localhost:3201/health  # Reporting
 ```
 
 ## Development Ports Summary
@@ -162,7 +162,7 @@ curl http://localhost:3201/health  # Analytics
 | 3000 | Gateway | 1 | API Gateway |
 | 3001-3009 | TypeScript | 6 | Auth, Carbon, Impact, Projects, Equivalents, Messaging |
 | 3100-3102 | Go | 3 | Transactions, Funds, Payments |
-| 3200-3201 | .NET Core | 2 | Portfolio, Analytics |
+| 3200-3201 | .NET Core | 2 | Portfolio, Reporting |
 
 **Total Services: 12** (1 Gateway + 11 Microservices)
 

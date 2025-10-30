@@ -17,7 +17,7 @@ curl http://localhost:3000/services
 |--------------------------------|------|----------------|
 | **API Gateway**                | 3000 | TypeScript     |
 | Auth Service                   | 3001 | TypeScript     |
-| Calculation Service            | 3002 | TypeScript     |
+| Webhook Service                | 3002 | TypeScript     |
 | Impact Calculation Service     | 3003 | TypeScript     |
 | Projects Service               | 3004 | TypeScript     |
 | Equivalents Service            | 3005 | TypeScript     |
@@ -26,7 +26,7 @@ curl http://localhost:3000/services
 | Funds Service                  | 3101 | Go             |
 | Payments Service               | 3102 | Go             |
 | Portfolio Service              | 3200 | C# (.NET Core) |
-| Analytics Service              | 3201 | C# (.NET Core) |
+| Reporting Service              | 3201 | C# (.NET Core) |
 
 ## Service Categories
 
@@ -40,10 +40,10 @@ Perfect for business logic, rapid development, and type sharing across the appli
 - API keys management
 - User and organization models
 
-#### Calculation Service (3002)
-- Carbon tracking
-- Emission calculations
-- Environmental impact metrics
+#### Webhook Service (3002)
+- Webhook handling
+- Event processing
+- External integrations
 
 #### Impact Calculation Service (3003)
 - Environmental factor transformations
@@ -96,7 +96,7 @@ Data-intensive services requiring strong typing and LINQ capabilities.
 - LINQ-based data shaping
 - Entity Framework Core integration
 
-#### Analytics Service (3201)
+#### Reporting Service (3201)
 - Heavy reporting and aggregates
 - Data pipeline processing
 - BI/export functionality

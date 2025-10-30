@@ -5,6 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Microservices Health Check Dashboard</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <style>
         * {
             margin: 0;
@@ -12,11 +13,90 @@
             box-sizing: border-box;
         }
 
+        :root {
+            /* Dark theme (default) */
+            --bg-primary: #000000;
+            --bg-secondary: rgba(255, 255, 255, 0.02);
+            --bg-tertiary: rgba(255, 255, 255, 0.05);
+            --text-primary: #ffffff;
+            --text-secondary: rgba(255, 255, 255, 0.9);
+            --text-tertiary: rgba(255, 255, 255, 0.7);
+            --border-primary: rgba(255, 255, 255, 0.15);
+            --border-hover: #14b8a6;
+            --btn-secondary-bg: rgba(255, 255, 255, 0.2);
+            --btn-secondary-hover: rgba(255, 255, 255, 0.3);
+            --card-bg: #1a1a1a;
+            --card-border: rgba(255, 255, 255, 0.1);
+            --shadow: rgba(0, 0, 0, 0.3);
+        }
+
+        [data-theme="light"] {
+            /* Light theme */
+            --bg-primary: #f9fafb;
+            --bg-secondary: rgba(0, 0, 0, 0.02);
+            --bg-tertiary: rgba(0, 0, 0, 0.05);
+            --text-primary: #1f2937;
+            --text-secondary: #374151;
+            --text-tertiary: #6b7280;
+            --border-primary: #e5e7eb;
+            --border-hover: #059669;
+            --btn-secondary-bg: rgba(0, 0, 0, 0.1);
+            --btn-secondary-hover: rgba(0, 0, 0, 0.15);
+            --card-bg: #ffffff;
+            --card-border: #e5e7eb;
+            --shadow: rgba(0, 0, 0, 0.1);
+        }
+
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: var(--bg-primary);
+            color: var(--text-primary);
             min-height: 100vh;
-            padding: 2rem;
+            padding-top: 80px;
+            padding-left: 2rem;
+            padding-right: 2rem;
+            padding-bottom: 2rem;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        .top-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 70px;
+            background: var(--bg-primary);
+            border-bottom: 1px solid var(--border-primary);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 2rem;
+            z-index: 1000;
+            backdrop-filter: blur(10px);
+            transition: background-color 0.3s ease, border-color 0.3s ease;
+        }
+
+        .top-bar-title {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            color: var(--text-primary);
+        }
+
+        .top-bar-title h1 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin: 0;
+        }
+
+        .top-bar-title i {
+            font-size: 1.5rem;
+        }
+
+        .top-bar-actions {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
         }
 
         .container {
@@ -24,16 +104,10 @@
             margin: 0 auto;
         }
 
-        header {
-            text-align: center;
-            color: white;
-            margin-bottom: 3rem;
-        }
 
-        h1 {
-            font-size: 2.5rem;
-            margin-bottom: 0.5rem;
-            font-weight: 700;
+        h2 {
+            font-size: 1.5rem;
+            margin: 0;
         }
 
         .subtitle {
@@ -44,52 +118,170 @@
         .controls {
             display: flex;
             justify-content: center;
+            align-items: center;
             gap: 1rem;
             margin-bottom: 2rem;
+            flex-wrap: wrap;
         }
 
-        .btn {
-            padding: 0.75rem 1.5rem;
-            border: none;
-            border-radius: 8px;
-            font-size: 1rem;
-            font-weight: 600;
+        .btn-icon {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            border: 2px solid var(--border-primary);
+            background: transparent;
+            color: var(--text-primary);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+            padding: 0;
+        }
+
+        .btn-icon:hover {
+            background: var(--bg-tertiary);
+            transform: scale(1.05);
+        }
+
+        .btn-icon.check-all {
+            border-color: var(--border-primary);
+        }
+
+        .btn-icon.check-all:hover {
+            border-color: var(--border-hover);
+            color: var(--border-hover);
+        }
+
+        .btn-icon.auto-refresh {
+            border-color: var(--border-primary);
+        }
+
+        .btn-icon.auto-refresh.active {
+            border-color: #10b981;
+            color: #10b981;
+        }
+
+        .btn-icon.auto-refresh:hover {
+            border-color: var(--border-hover);
+        }
+
+        .btn-icon.auto-refresh.active:hover {
+            border-color: #059669;
+            color: #059669;
+        }
+
+        .btn-theme {
+            background: transparent;
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            border: 1px solid var(--border-primary);
             cursor: pointer;
             transition: all 0.3s ease;
-            color: white;
+            font-size: 0.9rem;
+            font-weight: 500;
         }
 
-        .btn-primary {
-            background: #10b981;
+        .btn-theme:hover {
+            background: var(--bg-tertiary);
         }
 
-        .btn-primary:hover {
-            background: #059669;
-            transform: translateY(-2px);
+        /* Accordion Styles */
+        .accordion {
+            background: transparent;
+            border-radius: 12px;
+            margin-bottom: 1.5rem;
+            border: 2px solid var(--border-primary);
+            overflow: hidden;
+            transition: border-color 0.3s ease;
         }
 
-        .btn-secondary {
-            background: rgba(255, 255, 255, 0.2);
-            backdrop-filter: blur(10px);
+        .accordion:hover {
+            border-color: var(--border-hover);
         }
 
-        .btn-secondary:hover {
-            background: rgba(255, 255, 255, 0.3);
+        .accordion-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1.5rem;
+            cursor: pointer;
+            user-select: none;
+            background: transparent;
+            transition: background 0.2s;
+        }
+
+        .accordion-header:hover {
+            background: var(--bg-tertiary);
+        }
+
+        .accordion-title {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            color: var(--text-primary);
+        }
+
+        .accordion-icon {
+            font-size: 1.5rem;
+        }
+
+        .accordion-title h2 {
+            color: var(--text-primary);
+        }
+
+        .accordion-summary {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+            color: var(--text-primary);
+        }
+
+        .summary-stat {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .summary-stat .stat-icon {
+            font-size: 1.25rem;
+        }
+
+        .chevron {
+            font-size: 1.25rem;
+            transition: transform 0.3s ease;
+            margin-left: 0.5rem;
+            color: var(--text-primary);
+        }
+
+        .accordion-header.collapsed .chevron {
+            transform: rotate(-90deg);
+        }
+
+        .accordion-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease;
+        }
+
+        .accordion-content.expanded {
+            max-height: 5000px;
+            padding: 1.5rem;
+            background: var(--bg-secondary);
         }
 
         .services-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
             gap: 1.5rem;
-            margin-bottom: 2rem;
-        }
-
-        .stats {
-            display: flex;
-            justify-content: center;
-            gap: 2rem;
-            color: white;
-            font-size: 0.9rem;
         }
 
         .stat {
@@ -98,49 +290,95 @@
             gap: 0.5rem;
         }
 
-        .stat-value {
+        .stat-icon {
             font-size: 1.5rem;
-            font-weight: 700;
         }
+
+        /* Card styles that will be used in the web component */
     </style>
 </head>
 
 <body>
-    <div class="container">
-        <header>
-            <h1>🚀 Microservices Health Dashboard</h1>
-            <p class="subtitle">Real-time status monitoring for all services</p>
-        </header>
-
-        <div class="controls">
-            <button class="btn btn-primary" onclick="checkAllServices()">
-                🔄 Refresh All
+    <div class="top-bar">
+        <div class="top-bar-title">
+            <i class="fa-solid fa-heartbeat"></i>
+            <h1>Service Health Dashboard</h1>
+        </div>
+        <div class="top-bar-actions">
+            <button class="btn-icon check-all" onclick="checkAllItems()" title="Check All Services">
+                <i class="fa-solid fa-rotate"></i>
             </button>
-            <button class="btn btn-secondary" onclick="toggleAutoRefresh()">
-                ⏱️ Auto-refresh: <span id="autoRefreshStatus">OFF</span>
+            <button class="btn-icon auto-refresh" onclick="toggleAutoRefresh()" id="autoRefreshBtn" title="Toggle Auto-refresh">
+                <i class="fa-solid fa-circle-play" id="autoRefreshIcon"></i>
+            </button>
+            <button class="btn-theme" onclick="toggleTheme()" id="themeToggle" title="Toggle theme">
+                <i class="fa-solid fa-moon" id="themeIcon"></i>
+                <span id="themeText">Dark</span>
             </button>
         </div>
+    </div>
 
-        <div class="services-grid" id="servicesGrid"></div>
+    <div class="container">
 
-        <div class="stats">
-            <div class="stat">
-                <span>✅ Healthy:</span>
-                <span class="stat-value" id="healthyCount">0</span>
+        <!-- Web Applications Accordion -->
+        <div class="accordion" style="margin-top: 1rem;">
+            <div class="accordion-header" id="webappsHeader" onclick="toggleAccordion('webapps')">
+                <div class="accordion-title">
+                    <span class="accordion-icon"><i class="fa-solid fa-globe"></i></span>
+                    <h2>Web Applications</h2>
+                </div>
+                <div class="accordion-summary">
+                    <div class="summary-stat">
+                        <span class="stat-icon" style="color: #10b981;"><i class="fa-regular fa-circle-check"></i></span>
+                        <span id="webappsHealthyCount">-</span>
+                    </div>
+                    <div class="summary-stat">
+                        <span class="stat-icon" style="color: #f59e0b;"><i class="fa-regular fa-triangle-exclamation"></i></span>
+                        <span id="webappsSlowCount">-</span>
+                    </div>
+                    <div class="summary-stat">
+                        <span class="stat-icon" style="color: #ef4444;"><i class="fa-regular fa-circle-xmark"></i></span>
+                        <span id="webappsDownCount">-</span>
+                    </div>
+                    <span class="chevron"><i class="fa-solid fa-chevron-right"></i></span>
+                </div>
             </div>
-            <div class="stat">
-                <span>⚠️ Slow:</span>
-                <span class="stat-value" id="slowCount">0</span>
+            <div class="accordion-content expanded" id="webappsContent">
+                <div id="webappsGrid" class="services-grid"></div>
             </div>
-            <div class="stat">
-                <span>❌ Down:</span>
-                <span class="stat-value" id="downCount">0</span>
+        </div>
+
+        <!-- Backend Services Accordion -->
+        <div class="accordion">
+            <div class="accordion-header" id="servicesHeader" onclick="toggleAccordion('services')">
+                <div class="accordion-title">
+                    <span class="accordion-icon"><i class="fa-solid fa-gears"></i></span>
+                    <h2>Backend Services</h2>
+                </div>
+                <div class="accordion-summary">
+                    <div class="summary-stat">
+                        <span class="stat-icon" style="color: #10b981;"><i class="fa-regular fa-circle-check"></i></span>
+                        <span id="servicesHealthyCount">-</span>
+                    </div>
+                    <div class="summary-stat">
+                        <span class="stat-icon" style="color: #f59e0b;"><i class="fa-regular fa-triangle-exclamation"></i></span>
+                        <span id="servicesSlowCount">-</span>
+                    </div>
+                    <div class="summary-stat">
+                        <span class="stat-icon" style="color: #ef4444;"><i class="fa-regular fa-circle-xmark"></i></span>
+                        <span id="servicesDownCount">-</span>
+                    </div>
+                    <span class="chevron"><i class="fa-solid fa-chevron-right"></i></span>
+                </div>
+            </div>
+            <div class="accordion-content expanded" id="servicesContent">
+                <div id="servicesGrid" class="services-grid"></div>
             </div>
         </div>
     </div>
 
     <script>
-        // Define the service-status-card web component
+        // Web Component for service status cards
         class ServiceStatusCard extends HTMLElement {
             constructor() {
                 super();
@@ -149,92 +387,136 @@
             }
 
             static get observedAttributes() {
-                return ['name', 'port', 'status', 'response-time', 'language', 'features'];
-            }
-
-            connectedCallback() {
-                this.render();
+                return ['name', 'port', 'status', 'response-time', 'language', 'features', 'framework'];
             }
 
             attributeChangedCallback() {
                 this.render();
             }
 
-            getStatusColor(status) {
-                switch (status) {
-                    case 'healthy': return '#10b981';
-                    case 'slow': return '#f59e0b';
-                    case 'down': return '#ef4444';
-                    default: return '#6b7280';
-                }
+            getLanguageTag(language) {
+                const languageMap = {
+                    'TypeScript (NestJS)': { class: 'lang-ts', text: 'TypeScript' },
+                    'Python (FastAPI)': { class: 'lang-python', text: 'Python' },
+                    'Go (Fiber)': { class: 'lang-go', text: 'Go' },
+                    'Go': { class: 'lang-go', text: 'Go' },
+                    'Rust': { class: 'lang-rust', text: 'Rust' },
+                    'C# (.NET Core)': { class: 'lang-csharp', text: 'C#' },
+                };
+                return languageMap[language] || { class: 'lang-other', text: language };
             }
 
-            getLanguageTag(language) {
-                if (language.includes('TypeScript')) return { text: 'TS', class: 'typescript' };
-                if (language.includes('Go')) return { text: 'Go', class: 'go' };
-                if (language.includes('.NET')) return { text: 'C#', class: 'dotnet' };
-                if (language.includes('Rust')) return { text: 'RS', class: 'rust' };
-                if (language.includes('Python')) return { text: 'PY', class: 'python' };
-                return { text: 'Unknown', class: '' };
+            getFrameworkLogo(framework) {
+                const logoMap = {
+                    'Next.js': 'https://raw.githubusercontent.com/devicons/devicon/master/icons/nextjs/nextjs-original.svg',
+                    'Svelte': 'https://raw.githubusercontent.com/devicons/devicon/master/icons/svelte/svelte-original.svg',
+                    'Vue.js': 'https://raw.githubusercontent.com/devicons/devicon/master/icons/vuejs/vuejs-original.svg',
+                };
+                return logoMap[framework];
+            }
+
+            getFrameworkUrl(framework) {
+                const urlMap = {
+                    'Next.js': 'https://nextjs.org/',
+                    'Svelte': 'https://svelte.dev/',
+                    'Vue.js': 'https://vuejs.org/',
+                };
+                return urlMap[framework];
+            }
+
+            getLanguageUrl(language) {
+                const urlMap = {
+                    'TypeScript (NestJS)': 'https://nestjs.com/',
+                    'Python (FastAPI)': 'https://fastapi.tiangolo.com/',
+                    'Go (Fiber)': 'https://gofiber.io/',
+                    'Go': 'https://go.dev/',
+                    'Rust': 'https://actix.rs/',
+                    'C# (.NET Core)': 'https://dotnet.microsoft.com/',
+                };
+                return urlMap[language];
             }
 
             render() {
-                const name = this.getAttribute('name') || 'Unknown Service';
-                const port = this.getAttribute('port') || '0000';
-                const status = this.getAttribute('status') || 'checking';
-                const responseTime = this.getAttribute('response-time') || '-';
-                const language = this.getAttribute('language') || '';
+                const name = this.getAttribute('name');
+                const port = this.getAttribute('port');
+                const status = this.getAttribute('status');
+                const responseTime = this.getAttribute('response-time');
+                const language = this.getAttribute('language');
+                const framework = this.getAttribute('framework');
+                const url = this.getAttribute('url') || `http://localhost:${port}`;
                 const featuresAttr = this.getAttribute('features');
-                
-                let features = [];
-                try {
-                    features = featuresAttr ? JSON.parse(featuresAttr) : [];
-                } catch (e) {
-                    features = [];
+                const features = featuresAttr ? JSON.parse(featuresAttr) : [];
+
+                const languageTag = this.getLanguageTag(language);
+                const frameworkLogo = framework ? this.getFrameworkLogo(framework) : null;
+                const frameworkUrl = framework ? this.getFrameworkUrl(framework) : null;
+                const languageUrl = language ? this.getLanguageUrl(language) : null;
+
+                let statusClass = 'status-checking';
+                let statusText = 'Checking...';
+                let statusIcon = '<i class="fa-regular fa-circle-check"></i>';
+                let statusIndicatorIcon = '<i class="fa-solid fa-spinner fa-spin"></i>';
+
+                if (status === 'healthy') {
+                    statusClass = 'status-healthy';
+                    statusText = 'Healthy';
+                    statusIcon = '<i class="fa-regular fa-circle-check"></i>';
+                    statusIndicatorIcon = '<i class="fa-solid fa-circle-check"></i>';
+                } else if (status === 'slow') {
+                    statusClass = 'status-slow';
+                    statusText = 'Slow';
+                    statusIcon = '<i class="fa-regular fa-triangle-exclamation"></i>';
+                    statusIndicatorIcon = '<i class="fa-solid fa-triangle-exclamation"></i>';
+                } else if (status === 'down') {
+                    statusClass = 'status-down';
+                    statusText = 'Down';
+                    statusIcon = '<i class="fa-regular fa-circle-xmark"></i>';
+                    statusIndicatorIcon = '<i class="fa-solid fa-circle-xmark"></i>';
                 }
 
-                const statusColor = this.getStatusColor(status);
-                const languageTag = this.getLanguageTag(language);
-                
-                const featuresHTML = features.length > 0 ? `
-                    <div class="features">
-                        <button class="features-toggle" id="featuresToggle">
-                            <svg class="chevron" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
-                            </svg>
-                        </button>
-                        <div class="features-content" id="featuresContent">
-                            <ul class="features-list">
-                                ${features.map(feature => `<li class="feature-tag">${feature}</li>`).join('')}
-                            </ul>
+                let featuresHTML = '';
+                if (features.length > 0) {
+                    featuresHTML = `
+                        <div class="features-section">
+                            <button class="features-toggle" id="featuresToggle">
+                                <span>Features (${features.length})</span>
+                                <span class="feature-chevron"><i class="fa-solid fa-chevron-right"></i></span>
+                            </button>
+                            <div class="features-content" id="featuresContent">
+                                <ul class="features-list">
+                                    ${features.map(f => `<li>${f}</li>`).join('')}
+                                </ul>
+                            </div>
                         </div>
-                    </div>
-                ` : '';
+                    `;
+                }
 
                 this.shadowRoot.innerHTML = `
                     <style>
+                        * {
+                            box-sizing: border-box;
+                        }
+
                         .card {
-                            background: white;
+                            background: var(--card-bg Tunnel, #ffffff);
                             border-radius: 12px;
-                            padding: 1.5rem;
-                            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-                            transition: all 0.3s ease;
-                            position: relative;
+                            box-shadow: 0 4px 6px var(--shadow, rgba(0, 0, 0, 0.1));
+                            border: 1px solid var(--card-border, #e5e7eb);
                             overflow: hidden;
-                            opacity: ${status === 'healthy' ? '1' : '0.75'};
+                            transition: transform 0.2s, box-shadow 0.2s, background-color 0.3s ease, border-color 0.3s ease;
                         }
 
                         .card:hover {
                             transform: translateY(-4px);
-                            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.2);
-                            opacity: 1;
+                            box-shadow: 0 8px 16px var(--shadow, rgba(0, 0, 0, 0.15));
                         }
 
                         .card-header {
                             display: flex;
-                            align-items: center;
                             justify-content: space-between;
-                            margin-bottom: 1rem;
+                            align-items: flex-start;
+                            padding: 1.5rem;
+                            border-bottom: 2px solid var(--card-border);
                         }
 
                         .service-info {
@@ -242,167 +524,251 @@
                         }
 
                         .service-name {
-                            font-size: 1.1rem;
+                            font-size: 1.25rem;
                             font-weight: 700;
-                            color: #1f2937;
-                            margin-bottom: 0.25rem;
+                            color: var(--text-primary);
+                            margin-bottom: 0.5rem;
+                            display: flex;
+                            align-items: center;
+                            gap: 0.75rem;
+                        }
+
+                        .service-name a {
+                            color: var(--text-primary);
+                            text-decoration: none;
+                            transition: color 0.2s;
+                        }
+
+                        .service-name a:hover {
+                            color: var(--border-hover);
+                        }
+
+                        .framework-logo {
+                            width: 24px;
+                            height: 24px;
+                            background: var(--card-bg);
+                            border-radius: 4px;
+                            padding: 2px;
+                            cursor: pointer;
+                            transition: transform 0.2s;
+                        }
+
+                        .framework-logo:hover {
+                            transform: scale(1.1);
+                        }
+
+                        .language-link {
+                            display: inline-block;
+                            transition: transform 0.2s;
+                        }
+
+                        .language-link:hover {
+                            transform: scale(1.05);
                         }
 
                         .service-meta {
-                            font-size: 0.875rem;
-                            color: #6b7280;
                             display: flex;
-                            align-items: center;
-                            gap: 0.5rem;
-                        }
-
-                        .language-tag {
-                            display: inline-block;
-                            padding: 0.125rem 0.5rem;
-                            border-radius: 4px;
-                            font-size: 0.75rem;
-                            font-weight: 600;
-                            text-transform: uppercase;
-                        }
-
-                        .language-tag.typescript {
-                            background: #3178c6;
-                            color: white;
-                        }
-
-                        .language-tag.go {
-                            background: #00add8;
-                            color: white;
-                        }
-
-                        .language-tag.dotnet {
-                            background: #512bd4;
-                            color: white;
-                        }
-
-                        .language-tag.rust {
-                            background: #ce422b;
-                            color: white;
-                        }
-
-                        .language-tag.python {
-                            background: #3776ab;
-                            color: white;
+                            gap: 0.75rem;
+                            font-size: 0.875rem;
+                            color: var(--text-tertiary, #6b7280);
+                            flex-wrap: wrap;
                         }
 
                         .status-indicator {
-                            width: 16px;
-                            height: 16px;
+                            width: 24px;
+                            height: 24px;
                             border-radius: 50%;
-                            background: ${statusColor};
-                            box-shadow: 0 0 0 4px ${statusColor}20;
-                            animation: ${status === 'checking' ? 'pulse 2s infinite' : 'none'};
+                            display: flex;
+                            align-items: center;
+                            justify-content: center;
+                            font-size: 0.875rem;
+                        }
+
+                        .status-healthy .status-indicator {
+                            color: #10b981;
+                        }
+
+                        .status-slow .status-indicator {
+                            color: #f59e0b;
+                        }
+
+                        .status-down .status-indicator {
+                            color: #ef4444;
+                        }
+
+                        .status-checking .status-indicator {
+                            color: #6b7280;
+                        }
+
+                        .status-checking .status-indicator i {
+                            animation: pulse 2s infinite;
                         }
 
                         .card-body {
-                            display: flex;
-                            justify-content: space-between;
-                            align-items: center;
-                            padding-top: 1rem;
-                            border-top: 1px solid #e5e7eb;
+                            padding: 1.5rem;
+                            display: grid;
+                            grid-template-columns: repeat(2, 1fr);
+                            gap: 1rem;
                         }
 
                         .metric {
-                            text-align: center;
+                            display: flex;
+                            flex-direction: column;
+                            gap: 0.25rem;
                         }
 
                         .metric-label {
-                            font-size: 0.75rem;
-                            color: #6b7280;
-                            text-transform: uppercase;
-                            letter-spacing: 0.05em;
+                            font-size: 0.875rem;
+                            color: var(--text-tertiary);
+                            font-weight: 500;
                         }
 
                         .metric-value {
-                            font-size: 1.25rem;
+                            font-size: 1.125rem;
                             font-weight: 700;
-                            color: #1f2937;
-                            margin-top: 0.25rem;
+                            color: var(--text-primary);
                         }
 
                         .status-badge {
-                            display: inline-block;
-                            padding: 0.25rem 0.75rem;
-                            border-radius: 9999px;
-                            font-size: 0.75rem;
+                            display: inline-flex;
+                            align-items: center;
+                            gap: 0.5rem;
+                            padding: 0.375rem 0.75rem;
+                            border-radius: 6px;
+                            font-size: 0.875rem;
                             font-weight: 600;
-                            text-transform: uppercase;
-                            background: ${statusColor}20;
-                            color: ${statusColor};
                         }
 
-                        .features {
-                            position: relative;
-                            border-top: 1px solid #f3f4f6;
-                            margin: 0 -1.5rem -1.5rem;
-                            background: #fafbfc;
-                            border-radius: 0 0 12px 12px;
+                        .status-healthy .status-badge {
+                            background: #d1fae5;
+                            color: #065f46;
+                        }
+
+                        .status-healthy .status-badge i {
+                            color: #10b981;
+                        }
+
+                        .status-slow .status-badge {
+                            background: #fef3c7;
+                            color: #92400e;
+                        }
+
+                        .status-slow .status-badge i {
+                            color: #f59e0b;
+                        }
+
+                        .status-down .status-badge {
+                            background: #fee2e2;
+                            color: #991b1b;
+                        }
+
+                        .status-down .status-badge i {
+                            color: #ef4444;
+                        }
+
+                        .status-checking .status-badge {
+                            background: var(--bg-tertiary);
+                            color: var(--text-tertiary);
+                        }
+
+                        .status-checking .status-badge i {
+                            color: var(--text-tertiary);
+                        }
+
+                        .features-section {
+                            padding: 0 1.5rem 1.5rem;
                         }
 
                         .features-toggle {
                             width: 100%;
-                            padding: 0.5rem;
-                            border: none;
-                            background: transparent;
+                            padding: 0.75rem;
+                            background: var(--bg-secondary, #f9fafb);
+                            border: 1px solid var(--card-border, #e5e7eb);
+                            border-radius: 8px;
                             cursor: pointer;
                             display: flex;
+                            justify-content: space-between;
                             align-items: center;
-                            justify-content: center;
-                            transition: all 0.2s ease;
+                            font-weight: 600;
+                            color: var(--text-primary, #374151);
+                            transition: background 0.2s;
                         }
 
                         .features-toggle:hover {
-                            background: #f3f4f6;
+                            background: var(--bg-tertiary, #f3f4f6);
                         }
 
-                        .features-toggle:first-child:last-of-type {
-                            border-radius: 0 0 12px 12px;
+                        .feature-chevron {
+                            transition: transform 0.2s;
+                            font-size: 1rem;
                         }
 
-                        .chevron {
-                            width: 16px;
-                            height: 16px;
-                            transition: transform 0.3s ease;
-                            color: #9ca3af;
-                        }
-
-                        .chevron.expanded {
-                            transform: rotate(180deg);
+                        .feature-chevron.expanded {
+                            transform: rotate(90deg);
                         }
 
                         .features-content {
                             max-height: 0;
                             overflow: hidden;
                             transition: max-height 0.3s ease;
-                            border-radius: 0 0 12px 12px;
                         }
 
                         .features-content.expanded {
-                            max-height: 300px;
-                            overflow-y: auto;
+                            max-height: 500px;
+                            margin-top: 0.75rem;
                         }
 
                         .features-list {
-                            display: flex;
-                            flex-wrap: wrap;
-                            gap: 0.5rem;
                             list-style: none;
-                            padding: 0 1.5rem 0.75rem;
+                            padding: 0;
+                            margin: 0;
                         }
 
-                        .feature-tag {
+                        .features-list li {
+                            padding: 0.5rem 0.75rem;
+                            background: var(--bg-secondary, #ffffff);
+                            border-left: 3px solid #8b5cf6;
+                            margin-bottom: 0.5rem;
+                            border-radius: 0 4px 4px 0;
+                            font-size: 0.875rem;
+                            color: var(--text-secondary, #4b5563);
+                        }
+
+                        .language-tag {
                             font-size: 0.75rem;
-                            color: #6b7280;
-                            background: white;
-                            padding: 0.35rem 0.75rem;
-                            border-radius: 6px;
-                            border: 1px solid #e5e7eb;
-                            font-weight: 500;
+                            padding: 0.25rem 0.5rem;
+                            border-radius: 4px;
+                            font-weight: 600;
+                        }
+
+                        .lang-ts {
+                            background: #3178c6;
+                            color: white;
+                        }
+
+                        .lang-python {
+                            background: #3776ab;
+                            color: white;
+                        }
+
+                        .lang-go {
+                            background: #00add8;
+                            color: white;
+                        }
+
+                        .lang-rust {
+                            background: #ce422b;
+                            color: white;
+                        }
+
+                        .lang-csharp {
+                            background: #239120;
+                            color: white;
+                        }
+
+                        .lang-other {
+                            background: #6b7280;
+                            color: white;
                         }
 
                         @keyframes pulse {
@@ -415,21 +781,26 @@
                         }
                     </style>
 
-                    <div class="card">
+                    <div class="card ${statusClass}">
                         <div class="card-header">
                             <div class="service-info">
-                                <div class="service-name">${name}</div>
+                                <div class="service-name">
+                                    ${frameworkLogo ? `<a href="${frameworkUrl}" target="_blank" rel="noopener noreferrer"><img src="${frameworkLogo}" alt="${framework}" class="framework-logo" /></a>` : ''}
+                                    <a href="${url}" target="_blank" rel="noopener noreferrer">${name}</a>
+                                </div>
                                 <div class="service-meta">
                                     <span>Port ${port}</span>
-                                    <span class="language-tag ${languageTag.class}">${languageTag.text}</span>
+                                    ${framework ? `<a href="${frameworkUrl}" target="_blank" rel="noopener noreferrer" class="language-link"><span class="language-tag" style="background: #8b5cf6; color: white;">${framework}</span></a>` : ''}
+                                    ${!framework && language && languageUrl ? `<a href="${languageUrl}" target="_blank" rel="noopener noreferrer" class="language-link"><span class="language-tag ${languageTag.class}">${languageTag.text}</span></a>` : ''}
+                                    ${!framework && language && !languageUrl ? `<span class="language-tag ${languageTag.class}">${languageTag.text}</span>` : ''}
                                 </div>
                             </div>
-                            <div class="status-indicator"></div>
+                            <div class="status-indicator">${statusIndicatorIcon}</div>
                         </div>
                         <div class="card-body">
                             <div class="metric">
                                 <div class="metric-label">Status</div>
-                                <div class="status-badge">${status}</div>
+                                <div class="status-badge">${statusIcon} ${statusText}</div>
                             </div>
                             <div class="metric">
                                 <div class="metric-label">Response</div>
@@ -444,7 +815,7 @@
                 if (features.length > 0) {
                     const toggleBtn = this.shadowRoot.getElementById('featuresToggle');
                     const content = this.shadowRoot.getElementById('featuresContent');
-                    const chevron = toggleBtn.querySelector('.chevron');
+                    const chevron = toggleBtn.querySelector('.feature-chevron');
                     
                     toggleBtn.addEventListener('click', () => {
                         this.isExpanded = !this.isExpanded;
@@ -464,6 +835,59 @@
         // Register the web component
         customElements.define('service-status-card', ServiceStatusCard);
 
+        // Web applications configuration
+        const webapps = [
+            {
+                name: 'Web',
+                port: 9001,
+                framework: 'Next.js',
+                endpoint: 'http://localhost:9001',
+                url: 'http://localhost:9001',
+                features: [
+                    'Main web application',
+                    'React 19',
+                    'App Router',
+                    'Shared UI components'
+                ]
+            },
+            {
+                name: 'Dashboard',
+                port: 9003,
+                framework: 'Next.js',
+                endpoint: 'http://localhost:9003',
+                url: 'http://localhost:9003',
+                features: [
+                    'Admin dashboard',
+                    'Real-time metrics',
+                    'Service monitoring'
+                ]
+            },
+            {
+                name: 'Checkout',
+                port: 3006,
+                framework: 'Svelte',
+                endpoint: 'http://localhost:3006',
+                url: 'http://localhost:3006',
+                features: [
+                    'Checkout experience',
+                    'SvelteKit',
+                    'Fast performance'
+                ]
+            },
+            {
+                name: 'Post-Purchase',
+                port: 3007,
+                framework: 'Vue.js',
+                endpoint: 'http://localhost:3007',
+                url: 'http://localhost:3007',
+                features: [
+                    'Post-purchase portal',
+                    'Vue 3',
+                    'Vite'
+                ]
+            },
+        ];
+
         // Service configuration
         const services = [
             {
@@ -471,8 +895,11 @@
                 port: 3000,
                 language: 'TypeScript (NestJS)',
                 endpoint: 'http://localhost:3000/health',
+                url: 'http://localhost:3000',
                 features: [
                     'Service Discovery',
+                    'Request routing',
+                    'Load balancing'
                 ]
             },
             {
@@ -480,6 +907,7 @@
                 port: 3001,
                 language: 'TypeScript (NestJS)',
                 endpoint: 'http://localhost:3001/health',
+                url: 'http://localhost:3001',
                 features: [
                     'AuthN/Z',
                     'JWT/OAuth2',
@@ -488,14 +916,15 @@
                 ]
             },
             {
-                name: 'Calculation Service',
+                name: 'Webhook Service',
                 port: 3002,
                 language: 'TypeScript (NestJS)',
                 endpoint: 'http://localhost:3002/health',
+                url: 'http://localhost:3002',
                 features: [
-                    'Carbon tracking',
-                    'Emission calculations',
-                    'Environmental impact metrics',
+                    'Webhook handling',
+                    'Event processing',
+                    'External integrations',
                 ]
             },
             {
@@ -503,6 +932,7 @@
                 port: 3003,
                 language: 'TypeScript (NestJS)',
                 endpoint: 'http://localhost:3003/health',
+                url: 'http://localhost:3003',
                 features: [
                     'ImpactPay sessions',
                     'Checkout sessions',
@@ -513,6 +943,7 @@
                 port: 3004,
                 language: 'TypeScript (NestJS)',
                 endpoint: 'http://localhost:3004/health',
+                url: 'http://localhost:3004',
                 features: [
                     'Project metadata',
                     'Project assets & images'
@@ -523,6 +954,7 @@
                 port: 3005,
                 language: 'TypeScript (NestJS)',
                 endpoint: 'http://localhost:3005/health',
+                url: 'http://localhost:3005',
                 features: [
                     'Tangible comparisons of impact',
                 ]
@@ -532,6 +964,7 @@
                 port: 3009,
                 language: 'Rust',
                 endpoint: 'http://localhost:3009/health',
+                url: 'http://localhost:3009',
                 features: [
                     'Emails',
                     'Notifications',
@@ -539,10 +972,23 @@
                 ]
             },
             {
+                name: 'Users Service',
+                port: 3012,
+                language: 'Rust',
+                endpoint: 'http://localhost:3012/health',
+                url: 'http://localhost:3012',
+                features: [
+                    'User management',
+                    'User CRUD operations',
+                    'User authentication support'
+                ]
+            },
+            {
                 name: 'Calculator Service',
                 port: 3010,
                 language: 'Python (FastAPI)',
                 endpoint: 'http://localhost:3010/health',
+                url: 'http://localhost:3010/docs',
                 features: [
                     'Carbon emission calculations',
                     'Activity-based CO2 tracking',
@@ -550,10 +996,24 @@
                 ]
             },
             {
+                name: 'Analytics Service',
+                port: 3011,
+                language: 'Python (FastAPI)',
+                endpoint: 'http://localhost:3011/health',
+                url: 'http://localhost:3011/docs',
+                features: [
+                    'Metrics tracking',
+                    'Event tracking',
+                    'Data aggregation',
+                    'Dashboard statistics'
+                ]
+            },
+            {
                 name: 'Transactions Service',
                 port: 3100,
                 language: 'Go (Fiber)',
                 endpoint: 'http://localhost:3100/health',
+                url: 'http://localhost:3100',
                 features: [
                     'All money movement records',
                 ]
@@ -563,6 +1023,7 @@
                 port: 3101,
                 language: 'Go',
                 endpoint: 'http://localhost:3101/health',
+                url: 'http://localhost:3101',
                 features: [
                     'Funds ledger',
                     'Reconciliation',
@@ -575,6 +1036,7 @@
                 port: 3102,
                 language: 'Go',
                 endpoint: 'http://localhost:3102/health',
+                url: 'http://localhost:3102',
                 features: [
                     'PSP integrations',
                     'Low-latency parallel calls',
@@ -586,6 +1048,7 @@
                 port: 3200,
                 language: 'C# (.NET Core)',
                 endpoint: 'http://localhost:3200/health',
+                url: 'http://localhost:3200',
                 features: [
                     'Portfolio aggregation',
                     'Reporting',
@@ -593,10 +1056,11 @@
                 ]
             },
             {
-                name: 'Analytics Service',
+                name: 'Reporting Service',
                 port: 3201,
                 language: 'C# (.NET Core)',
                 endpoint: 'http://localhost:3201/health',
+                url: 'http://localhost:3201',
                 features: [
                     'Heavy reporting',
                     'Aggregates',
@@ -607,20 +1071,56 @@
 
         let autoRefreshInterval = null;
 
-        // Check individual service
-        async function checkService(service) {
+        // Toggle accordion
+        function toggleAccordion(section) {
+            const header = document.getElementById(`${section}Header`);
+            const content = document.getElementById(`${section}Content`);
+            
+            header.classList.toggle('collapsed');
+            content.classList.toggle('expanded');
+        }
+
+        // Check individual item (webapp or service)
+        async function checkItem(item) {
             const startTime = performance.now();
 
             try {
-                const response = await fetch(service.endpoint, {
-                    method: 'GET',
-                    mode: 'cors',
-                });
+                // For services with /health endpoint, try CORS first
+                // For webapps, use no-cors mode to avoid CORS issues
+                const isHealthEndpoint = item.endpoint && item.endpoint.includes('/health');
+                let response;
+                
+                if (isHealthEndpoint) {
+                    // Try CORS mode for services with health endpoints
+                    try {
+                        response = await fetch(item.endpoint, {
+                            method: 'GET',
+                            mode: 'cors',
+                            cache: 'no-cache',
+                        });
+                    } catch (corsError) {
+                        // If CORS fails, try no-cors as fallback
+                        response = await fetch(item.endpoint, {
+                            method: 'GET',
+                            mode: 'no-cors',
+                            cache: 'no-cache',
+                        });
+                    }
+                } else {
+                    // For webapps, use no-cors mode
+                    response = await fetch(item.endpoint, {
+                        method: 'GET',
+                        mode: 'no-cors',
+                        cache: 'no-cache',
+                    });
+                }
 
                 const endTime = performance.now();
                 const responseTime = Math.round(endTime - startTime);
 
-                if (response.ok) {
+                // With no-cors mode, response.type is 'opaque' and response.ok might not be accurate
+                // So we check response.type for opaque responses
+                if (response.type === 'opaque' || response.ok) {
                     return {
                         status: responseTime > 1000 ? 'slow' : 'healthy',
                         responseTime: `${responseTime}ms`
@@ -629,12 +1129,90 @@
 
                 return { status: 'down', responseTime: '-' };
             } catch (error) {
+                // If fetch fails completely (network error), try image loading for webapps
+                // This works even with CORS restrictions
+                if (item.endpoint && !item.endpoint.includes('/health')) {
+                    try {
+                        const img = new Image();
+                        const timeout = new Promise((_, reject) => 
+                            setTimeout(() => reject(new Error('timeout')), 3000)
+                        );
+                        
+                        await Promise.race([
+                            new Promise((resolve) => {
+                                // Even if image fails, if the server responded, we're good
+                                img.onload = () => resolve(true);
+                                img.onerror = () => {
+                                    // Try to fetch favicon as a simple check
+                                    fetch(item.endpoint + '/favicon.ico', { 
+                                        method: 'HEAD',
+                                        mode: 'no-cors'
+                                    }).then(() => resolve(true)).catch(() => resolve(false));
+                                };
+                                // Try loading favicon which most apps have
+                                img.src = item.endpoint + '/favicon.ico?' + Date.now();
+                            }),
+                            timeout
+                        ]);
+                        
+                        const endTime = performance.now();
+                        const responseTime = Math.round(endTime - startTime);
+                        
+                        return {
+                            status: responseTime > 1000 ? 'slow' : 'healthy',
+                            responseTime: `${responseTime}ms`
+                        };
+                    } catch (e) {
+                        // All methods failed, service is down
+                    }
+                }
+                
                 return { status: 'down', responseTime: '-' };
             }
         }
 
-        // Check all services
-        async function checkAllServices() {
+        // Check web applications
+        async function checkWebapps() {
+            const grid = document.getElementById('webappsGrid');
+
+            // Initialize cards if not present
+            if (grid.children.length === 0) {
+                webapps.forEach(webapp => {
+                    const card = document.createElement('service-status-card');
+                    card.setAttribute('name', webapp.name);
+                    card.setAttribute('port', webapp.port);
+                    card.setAttribute('status', 'checking');
+                    card.setAttribute('response-time', '...');
+                    card.setAttribute('framework', webapp.framework);
+                    card.setAttribute('url', webapp.url);
+                    if (webapp.features) {
+                        card.setAttribute('features', JSON.stringify(webapp.features));
+                    }
+                    card.id = `webapp-${webapp.port}`;
+                    grid.appendChild(card);
+                });
+            }
+
+            // Check all webapps in parallel
+            const results = await Promise.all(
+                webapps.map(webapp => checkItem(webapp))
+            );
+
+            // Update cards with results
+            webapps.forEach((webapp, index) => {
+                const card = document.getElementById(`webapp-${webapp.port}`);
+                const result = results[index];
+
+                card.setAttribute('status', result.status);
+                card.setAttribute('response-time', result.responseTime);
+            });
+
+            // Update stats
+            updateWebappStats(results);
+        }
+
+        // Check backend services
+        async function checkServices() {
             const grid = document.getElementById('servicesGrid');
 
             // Initialize cards if not present
@@ -646,6 +1224,7 @@
                     card.setAttribute('status', 'checking');
                     card.setAttribute('response-time', '...');
                     card.setAttribute('language', service.language);
+                    card.setAttribute('url', service.url);
                     if (service.features) {
                         card.setAttribute('features', JSON.stringify(service.features));
                     }
@@ -656,7 +1235,7 @@
 
             // Check all services in parallel
             const results = await Promise.all(
-                services.map(service => checkService(service))
+                services.map(service => checkItem(service))
             );
 
             // Update cards with results
@@ -669,38 +1248,93 @@
             });
 
             // Update stats
-            updateStats(results);
+            updateServiceStats(results);
         }
 
-        // Update statistics
-        function updateStats(results) {
+        // Update webapp statistics
+        function updateWebappStats(results) {
             const healthy = results.filter(r => r.status === 'healthy').length;
             const slow = results.filter(r => r.status === 'slow').length;
             const down = results.filter(r => r.status === 'down').length;
 
-            document.getElementById('healthyCount').textContent = healthy;
-            document.getElementById('slowCount').textContent = slow;
-            document.getElementById('downCount').textContent = down;
+            document.getElementById('webappsHealthyCount').textContent = healthy;
+            document.getElementById('webappsSlowCount').textContent = slow;
+            document.getElementById('webappsDownCount').textContent = down;
+        }
+
+        // Update service statistics
+        function updateServiceStats(results) {
+            const healthy = results.filter(r => r.status === 'healthy').length;
+            const slow = results.filter(r => r.status === 'slow').length;
+            const down = results.filter(r => r.status === 'down').length;
+
+            document.getElementById('servicesHealthyCount').textContent = healthy;
+            document.getElementById('servicesSlowCount').textContent = slow;
+            document.getElementById('servicesDownCount').textContent = down;
+        }
+
+        // Check all items
+        async function checkAllItems() {
+            await Promise.all([
+                checkWebapps(),
+                checkServices()
+            ]);
         }
 
         // Toggle auto-refresh
         function toggleAutoRefresh() {
-            const statusEl = document.getElementById('autoRefreshStatus');
+            const autoRefreshBtn = document.getElementById('autoRefreshBtn');
+            const autoRefreshIcon = document.getElementById('autoRefreshIcon');
 
             if (autoRefreshInterval) {
                 clearInterval(autoRefreshInterval);
                 autoRefreshInterval = null;
-                statusEl.textContent = 'OFF';
+                autoRefreshBtn.classList.remove('active');
+                autoRefreshIcon.className = 'fa-solid fa-circle-play';
             } else {
-                autoRefreshInterval = setInterval(checkAllServices, 3000);
-                statusEl.textContent = 'ON (3s)';
-                checkAllServices();
+                autoRefreshInterval = setInterval(checkAllItems, 3000);
+                autoRefreshBtn.classList.add('active');
+                autoRefreshIcon.className = 'fa-solid fa-circle-stop';
+                checkAllItems();
             }
+        }
+
+        // Theme management
+        function initTheme() {
+            const savedTheme = localStorage.getItem('theme') || 'dark';
+            applyTheme(savedTheme);
+        }
+
+        function applyTheme(theme) {
+            document.documentElement.setAttribute('data-theme', theme);
+            localStorage.setItem('theme', theme);
+            
+            const themeIcon = document.getElementById('themeIcon');
+            const themeText = document.getElementById('themeText');
+            
+            if (theme === 'light') {
+                themeIcon.className = 'fa-solid fa-sun';
+                themeText.textContent = 'Light';
+            } else {
+                themeIcon.className = 'fa-solid fa-moon';
+                themeText.textContent = 'Dark';
+            }
+        }
+
+        function toggleTheme() {
+            const currentTheme = document.documentElement.getAttribute('data-theme') || 'dark';
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            applyTheme(newTheme);
+            
+            // Re-render cards to update theme
+            const cards = document.querySelectorAll('service-status-card');
+            cards.forEach(card => card.render());
         }
 
         // Initialize on page load
         window.addEventListener('DOMContentLoaded', () => {
-            checkAllServices();
+            initTheme();
+            checkAllItems();
         });
     </script>
 </body>

@@ -17,7 +17,7 @@ The platform consists of a polyglot microservices architecture with:
 services/
 ├── ts/                          # TypeScript/NestJS Services
 │   ├── auth-service/           # Port 3001
-│   ├── calculation-service/    # Port 3002
+│   ├── webhook-service/        # Port 3002
 │   ├── sessions-service/       # Port 3003
 │   ├── projects-service/       # Port 3004
 │   └── equivalents-service/    # Port 3005
@@ -29,7 +29,7 @@ services/
 │   └── payments-service/       # Port 3102
 └── cs/                          # .NET Core Services
     ├── portfolio-service/      # Port 3200
-    └── analytics-service/      # Port 3201
+    └── reporting-service/      # Port 3201
 ```
 
 ## Service Details
@@ -45,9 +45,9 @@ services/
 - **Purpose**: AuthN/Z, JWT/OAuth2, API keys, user/org models
 - **Why NestJS**: Rich ecosystem for auth, guards/interceptors fit perfectly, easy integration with Passport/Keycloak/IdP
 
-#### Calculation Service (Port 3002)
-- **Purpose**: Carbon tracking and calculations
-- **Why NestJS**: Existing service for carbon-related operations
+#### Webhook Service (Port 3002)
+- **Purpose**: Webhook handling and event processing
+- **Why NestJS**: Rich ecosystem for integrations and real-time event handling
 
 #### Impact Calculation Service (Port 3003)
 - **Purpose**: Data transforms, environmental factors, scientific constants
@@ -88,7 +88,7 @@ services/
 - **Purpose**: Portfolio aggregation, reporting, typed DTOs
 - **Why .NET**: LINQ/EF Core are excellent for data shaping; robust type system for reporting
 
-#### Analytics Service (Port 3201) - Optional
+#### Reporting Service (Port 3201) - Optional
 - **Purpose**: Heavy reporting, aggregates, data pipelines
 - **Why .NET**: Performs well for compute + strong typing; good tooling for BI/export pipelines
 
@@ -122,7 +122,7 @@ The API Gateway (Port 3000) provides a unified interface to all microservices:
 - `GET /portfolios/:id/report` → Portfolio Service (.NET)
 
 ### Analytics Routes
-- `GET /analytics/reports` → Analytics Service (.NET)
+- `GET /analytics/reports` → Reporting Service (.NET)
 
 ### Messaging Routes
 - `POST /messages` → Messaging Service
@@ -181,7 +181,7 @@ cd services/go/payments-service && go run main.go
 #### Start All .NET Services
 ```bash
 cd services/cs/portfolio-service && dotnet run
-cd services/cs/analytics-service && dotnet run
+cd services/cs/reporting-service && dotnet run
 ```
 
 ### Using Docker Compose

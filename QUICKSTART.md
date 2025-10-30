@@ -84,8 +84,8 @@ Open new terminal tabs for each:
 cd services/ts/auth-service
 pnpm dev
 
-# Calculation Service (Port 3002)
-cd services/ts/calculation-service
+# Webhook Service (Port 3002)
+cd services/ts/webhook-service
 pnpm dev
 
 # Sessions Service (Port 3003)
@@ -128,8 +128,8 @@ go run main.go
 cd services/cs/portfolio-service
 dotnet run
 
-# Analytics Service (Port 3201)
-cd services/cs/analytics-service
+# Reporting Service (Port 3201)
+cd services/cs/reporting-service
 dotnet run
 ```
 
@@ -199,7 +199,7 @@ bilo-repo/
 ├── services/
 │   ├── ts/                   # TypeScript/NestJS Services
 │   │   ├── auth-service/     # Port 3001
-│   │   ├── calculation-service/   # Port 3002
+│   │   ├── webhook-service/        # Port 3002
 │   │   ├── sessions-service/  # Port 3003
 │   │   ├── projects-service/ # Port 3004
 │   │   ├── equivalents-service/  # Port 3005
@@ -210,7 +210,7 @@ bilo-repo/
 │   │   └── payments-service/ # Port 3102
 │   └── dotnet/              # .NET Core Services
 │       ├── portfolio-service/    # Port 3200
-│       └── analytics-service/    # Port 3201
+│       └── reporting-service/    # Port 3201
 ├── ARCHITECTURE.md          # Detailed architecture docs
 ├── SERVICES.md             # Service overview
 ├── docker-compose.yml      # Docker orchestration

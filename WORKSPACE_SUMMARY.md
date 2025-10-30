@@ -11,7 +11,7 @@ The monorepo includes **13 TypeScript/Node.js packages** managed by pnpm workspa
 
 ### TypeScript Services (6)
 - ✅ `auth-service` - Port 3001
-- ✅ `calculation-service` - Port 3002
+- ✅ `webhook-service` - Port 3002
 - ✅ `equivalents-service` - Port 3005
 - ✅ `sessions-service` - Port 3003
 - ✅ `messaging-service` - Port 3009
@@ -38,7 +38,7 @@ These are standalone Go services with their own `go.mod`:
 These are standalone .NET services with their own `.csproj`:
 
 - 🟣 `portfolio-service` - Port 3200
-- 🟣 `analytics-service` - Port 3201
+- 🟣 `reporting-service` - Port 3201
 
 **Install:** `dotnet restore` in each service directory
 
@@ -160,7 +160,7 @@ bilo-repo/
 ├── services/
 │   ├── ts/               # TypeScript services (6)
 │   │   ├── auth-service/           ✅ Port 3001
-│   │   ├── calculation-service/    ✅ Port 3002
+│   │   ├── webhook-service/        ✅ Port 3002
 │   │   ├── equivalents-service/    ✅ Port 3005
 │   │   ├── sessions-service/  ✅ Port 3003
 │   │   ├── messaging-service/      ✅ Port 3009
@@ -173,7 +173,7 @@ bilo-repo/
 │   │
 │   └── dotnet/           # .NET services (2)
 │       ├── portfolio-service/      🟣 Port 3200
-│       └── analytics-service/      🟣 Port 3201
+│       └── reporting-service/      🟣 Port 3201
 │
 └── packages/             # Shared packages (4)
     ├── eslint-config/    ✅ Shared ESLint

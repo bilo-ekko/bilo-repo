@@ -23,7 +23,7 @@ services/
 |---------|------|----------|--------|----------|
 | **API Gateway** | 3000 | TypeScript (NestJS) | ✅ Built | `apps/api-gateway/` |
 | Auth Service | 3001 | TypeScript (NestJS) | ✅ Built | `services/ts/auth-service/` |
-| Calculation Service | 3002 | TypeScript (NestJS) | ✅ Existing | `services/ts/calculation-service/` |
+| Webhook Service | 3002 | TypeScript (NestJS) | ✅ Existing | `services/ts/webhook-service/` |
 | Sessions Service | 3003 | TypeScript (NestJS) | ✅ Built | `services/ts/sessions-service/` |
 | Projects Service | 3004 | TypeScript (NestJS) | ✅ Built | `services/ts/projects-service/` |
 | Equivalents Service | 3005 | TypeScript (NestJS) | ✅ Built | `services/ts/equivalents-service/` |
@@ -32,7 +32,7 @@ services/
 | Funds Service | 3101 | Go | ✅ Built | `services/go/funds-service/` |
 | Payments Service | 3102 | Go | ✅ Built | `services/go/payments-service/` |
 | Portfolio Service | 3200 | C# (.NET Core) | ✅ Built | `services/cs/portfolio-service/` |
-| Analytics Service | 3201 | C# (.NET Core) | ✅ Built | `services/cs/analytics-service/` |
+| Reporting Service | 3201 | C# (.NET Core) | ✅ Built | `services/cs/reporting-service/` |
 
 **Total: 12 Services (1 Gateway + 11 Microservices)**
 
@@ -74,10 +74,9 @@ services/
 - Pub/Sub patterns
 - Message broker integration (Kafka/RabbitMQ/SNS)
 
-#### Calculation Service (Port 3002)
+#### Webhook Service (Port 3002)
 - Existing service maintained
-- Carbon tracking
-- Emission calculations
+- Webhook handling and event processing
 
 ### 3. Go Services (3 Services)
 
@@ -109,7 +108,7 @@ services/
 - LINQ-based data shaping
 - Entity Framework Core ready
 
-#### Analytics Service (Port 3201)
+#### Reporting Service (Port 3201)
 - Heavy reporting and aggregates
 - Data pipeline processing
 - BI/export functionality

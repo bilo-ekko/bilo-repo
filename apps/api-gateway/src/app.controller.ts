@@ -125,11 +125,11 @@ export class AppController {
     );
   }
 
-  // Analytics Service Routes (Port 3201)
+  // Reporting Service Routes (Port 3201)
   @Get('/analytics/reports')
   getAnalyticsReports() {
     return this.appService.proxyToService(
-      'analytics-service',
+      'reporting-service',
       'analytics/reports',
     );
   }

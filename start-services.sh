@@ -107,7 +107,7 @@ start_ts_services() {
     
     services=(
         "auth-service:3001"
-        "calculation-service:3002"
+        "webhook-service:3002"
         "sessions-service:3003"
         "projects-service:3004"
         "equivalents-service:3005"
@@ -171,6 +171,7 @@ start_rust_services() {
     
     services=(
         "messaging-service:3009"
+        "users-service:3012"
     )
     
     for service in "${services[@]}"; do
@@ -194,7 +195,7 @@ start_dotnet_services() {
     
     services=(
         "portfolio-service:3200"
-        "analytics-service:3201"
+        "reporting-service:3201"
     )
     
     for service in "${services[@]}"; do
