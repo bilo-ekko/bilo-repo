@@ -500,7 +500,7 @@
                         }
 
                         .card {
-                            background: var(--card-bg Tunnel, #ffffff);
+                            background: var(--card-bg, #ffffff);
                             border-radius: 12px;
                             box-shadow: 0 4px 6px var(--shadow, rgba(0, 0, 0, 0.1));
                             border: 1px solid var(--card-border, #e5e7eb);
@@ -829,7 +829,9 @@
                             </div>
                             <div style="display: flex; flex-direction: row; gap: 0.5rem; justify-content: space-between;">
                                 <div class="metric">
-                                    <div class="metric-label"><i class="fa-solid fa-arrow-down"></i> Min</div>
+                                    <div class="metric-label">
+                                        <i class="fa-solid fa-arrow-down"></i> 
+                                        Min</div>
                                     <div class="metric-value">${stats.min}ms</div>
                                 </div>
                                 <div class="metric">
@@ -886,8 +888,8 @@
         customElements.define('service-status-card', ServiceStatusCard);
 
         // Data collection configuration
-        const REFRESH_INTERVAL = 2000;
-        const DATA_POINTS = 20;
+        const REFRESH_INTERVAL = 200;
+        const DATA_POINTS = 100;
         let responseTimeData = {}; // Store response time data for each service
         let isAutoRefreshActive = false;
 
