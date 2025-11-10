@@ -16,7 +16,7 @@ WORKDIR /root/
 
 COPY --from=builder /app/funds-service .
 
-EXPOSE 3101
+EXPOSE 4009
 
 CMD ["./funds-service"]
 

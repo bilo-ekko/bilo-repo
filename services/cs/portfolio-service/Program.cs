@@ -59,7 +59,7 @@ app.MapGet("/portfolios/{id}/report", (string id) =>
     return Results.Ok(new { id, message = "Portfolio report" });
 });
 
-var port = Environment.GetEnvironmentVariable("PORT") ?? "3200";
+var port = Environment.GetEnvironmentVariable("PORT") ?? "4010";
 Console.WriteLine($"📊 Portfolio Service is running on: http://localhost:{port}");
 
 app.Run($"http://0.0.0.0:{port}");

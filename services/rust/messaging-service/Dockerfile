@@ -26,10 +26,10 @@ WORKDIR /app
 COPY --from=builder /app/target/release/messaging-service .
 
 # Expose port
-EXPOSE 3009
+EXPOSE 4004
 
 # Set environment variables
-ENV PORT=3009
+ENV PORT=4004
 ENV RUST_LOG=info
 
 # Run the binary

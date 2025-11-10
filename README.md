@@ -120,6 +120,7 @@ Frontend:
         />
     </a>
 </div>
+
 ## Overview
 
 This repository demonstrates a modern monorepo pattern where multiple technology stacks coexist, each using their native tooling while benefiting from unified orchestration via Turborepo. The monorepo includes web applications, shared packages, and microservices across five different programming languages.
@@ -149,6 +150,19 @@ Frontend applications built with modern frameworks:
 - **Vue.js application** (web-postpurchase) for post-purchase portal
 - Shared UI components and configurations
 
+### Services (`/services`)
+
+Backend microservices organized by technology stack:
+
+```
+services/
+├── ts/             # TypeScript/Node.js services (NestJS)
+├── cs/             # C# services (.NET)
+├── go/             # Go services (Fiber)
+├── py/             # Python services (FastAPI)
+└── rust/           # Rust services (Actix)
+```
+
 ### Packages (`/packages`)
 
 Reusable code organized by technology stack:
@@ -171,18 +185,7 @@ packages/
 
 Each stack's shared packages use native dependency management (pnpm workspaces, go modules, cargo, etc.) while Turborepo handles cross-stack orchestration.
 
-### Services (`/services`)
 
-Backend microservices organized by technology stack:
-
-```
-services/
-├── ts/             # TypeScript/Node.js services (NestJS)
-├── cs/             # C# services (.NET)
-├── go/             # Go services (Fiber)
-├── py/             # Python services (FastAPI)
-└── rust/           # Rust services (Actix)
-```
 
 ## Technology Stacks
 
@@ -253,6 +256,10 @@ This starts:
 - All Next.js applications
 - All TypeScript services
 - All services in other stacks (via their `package.json` scripts)
+
+> **💡 Tip**: After starting all services, you can monitor their health status using the [Service Health Dashboard](./health-check.html) to view real-time status, response times, and metrics for all running services.
+
+![Service Health Dashboard](./health-check-preview.png)
 
 ### Start Individual Services
 
@@ -456,15 +463,18 @@ By default, services and apps run on the following ports:
 
 | Port Range | Type       | Example                    |
 |------------|------------|----------------------------|
-| 3000-3005  | TypeScript | auth-service (3001)        |
+| 4000-4003  | TypeScript | API Gateway (4000), auth-service (4001), sessions-service (4002), projects-service (4003) |
+| 4004       | Rust       | messaging-service (4004)   |
+| 4005-4006  | Python     | calculator-service (4005), analytics-service (4006) |
+| 4007       | Rust       | users-service (4007)      |
+| 4008-4009  | Go         | transactions-service (4008), funds-service (4009) |
+| 4010-4011  | C#         | portfolio-service (4010), reporting-service (4011) |
 | 3006       | SvelteKit  | web-checkout               |
 | 3007       | Vue.js     | web-postpurchase           |
-| 3009       | Rust       | messaging-service          |
-| 3010       | Python     | calculator-service         |
-| 3101-3103  | Go         | funds-service (3101)       |
-| 3201-3202  | C#         | reporting-service (3201)   |
+| 9001       | Next.js    | web                        |
+| 9003       | Next.js    | web-dashboard              |
 
-Ports can be customized via environment variables (`PORT=3099`).
+Ports can be customized via environment variables (`PORT=4001`).
 
 ## Shared Packages
 
@@ -518,7 +528,7 @@ Create `.env` files in service directories:
 
 ```bash
 # services/ts/auth-service/.env
-PORT=3001
+PORT=4001
 DATABASE_URL=postgresql://localhost:5432/auth
 ```
 

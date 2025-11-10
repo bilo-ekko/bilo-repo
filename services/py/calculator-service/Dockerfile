@@ -10,10 +10,10 @@ RUN pip install --no-cache-dir -r requirements.txt
 COPY main.py .
 
 # Expose port
-EXPOSE 3010
+EXPOSE 4005
 
 # Set environment variable
-ENV PORT=3010
+ENV PORT=4005
 
 # Run the application
 CMD ["python", "main.py"]

@@ -31,7 +31,7 @@ func main() {
 	// Get port from environment or default
 	port := os.Getenv("PORT")
 	if port == "" {
-		port = "3101"
+		port = "4009"
 	}
 
 	log.Printf("💵 Funds Service is running on: http://localhost:%s\n", port)

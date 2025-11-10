@@ -138,7 +138,7 @@ async def get_emission_factors():
 
 
 if __name__ == "__main__":
-    port = int(os.getenv("PORT", "3010"))
+    port = int(os.getenv("PORT", "4005"))
     print(f"🐍 Starting Calculation Service (Python/FastAPI) on port {port}")
     
     uvicorn.run(

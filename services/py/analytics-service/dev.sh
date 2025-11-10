@@ -22,8 +22,8 @@ cleanup() {
     # Kill any remaining Python processes for this service
     pkill -9 -f "analytics-service" 2>/dev/null || true
     
-    # Free up port 3011
-    lsof -ti :3011 | xargs kill -9 2>/dev/null || true
+    # Free up port 4006
+    lsof -ti :4006 | xargs kill -9 2>/dev/null || true
     
     echo "✅ Service stopped"
     exit 0
@@ -56,7 +56,7 @@ $VENV_PIP install -q --upgrade pip
 $VENV_PIP install -q -r requirements.txt
 
 echo ""
-echo "🚀 Starting server on port 3011..."
+echo "🚀 Starting server on port 4006..."
 echo ""
 
 # Run the application and store its PID

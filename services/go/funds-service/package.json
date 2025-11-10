@@ -10,7 +10,7 @@
     "lint": "golangci-lint run",
     "check-types": "go build -o /dev/null main.go",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "kill": "kill -9 $(lsof -ti:3101) 2>/dev/null || echo 'No process running on port 3101'"
+    "kill": "kill -9 $(lsof -ti:4009) 2>/dev/null || echo 'No process running on port 4009'"
   },
   "keywords": [],
   "author": "",

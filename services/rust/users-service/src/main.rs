@@ -134,7 +134,7 @@ async fn get_user(path: web::Path<String>) -> impl Responder {
 async fn main() -> std::io::Result<()> {
     env_logger::init_from_env(env_logger::Env::new().default_filter_or("info"));
 
-    let port = env::var("PORT").unwrap_or_else(|_| "3012".to_string());
+    let port = env::var("PORT").unwrap_or_else(|_| "4007".to_string());
     let bind_address = format!("0.0.0.0:{}", port);
 
     log::info!("🚀 Starting Users Service (Rust) on {}", bind_address);

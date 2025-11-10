@@ -14,7 +14,7 @@ FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
 
-EXPOSE 3200
+EXPOSE 4010
 
 ENTRYPOINT ["dotnet", "portfolio-service.dll"]
 

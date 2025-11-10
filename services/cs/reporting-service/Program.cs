@@ -68,7 +68,7 @@ app.MapGet("/analytics/export", () =>
     return Results.Ok(new { message = "Data exported" });
 });
 
-var port = Environment.GetEnvironmentVariable("PORT") ?? "3201";
+var port = Environment.GetEnvironmentVariable("PORT") ?? "4011";
 Console.WriteLine($"📊 Reporting Service is running on: http://localhost:{port}");
 
 app.Run($"http://0.0.0.0:{port}");

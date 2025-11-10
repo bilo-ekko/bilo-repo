@@ -24,8 +24,8 @@ cleanup() {
     pkill -9 -f "target/debug/users-service" 2>/dev/null || true
     pkill -9 -f "users-service" 2>/dev/null || true
     
-    # Free up port 3012
-    lsof -ti :3012 | xargs kill -9 2>/dev/null || true
+    # Free up port 4007
+    lsof -ti :4007 | xargs kill -9 2>/dev/null || true
     
     echo "✅ Cleanup complete"
     exit 0

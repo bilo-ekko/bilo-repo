@@ -333,7 +333,7 @@ async def clear_events():
 
 
 if __name__ == "__main__":
-    port = int(os.getenv("PORT", "3011"))
+    port = int(os.getenv("PORT", "4006"))
     print(f"🐍 Starting Analytics Service (Python/FastAPI) on port {port}")
     
     uvicorn.run(

@@ -16,7 +16,7 @@ WORKDIR /root/
 
 COPY --from=builder /app/transactions-service .
 
-EXPOSE 3100
+EXPOSE 4008
 
 CMD ["./transactions-service"]
 

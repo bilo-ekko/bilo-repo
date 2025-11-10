@@ -7,9 +7,9 @@ services:
       context: ./apps/api-gateway
       dockerfile: Dockerfile
     ports:
-      - "3000:3000"
+      - "4000:4000"
     environment:
-      - PORT=3000
+      - PORT=4000
       - NODE_ENV=production
     depends_on:
       - auth-service
@@ -31,9 +31,9 @@ services:
       context: ./services/ts/auth-service
       dockerfile: ../../Dockerfile.nestjs
     ports:
-      - "3001:3001"
+      - "4001:4001"
     environment:
-      - PORT=3001
+      - PORT=4001
       - NODE_ENV=production
     networks:
       - microservices
@@ -55,9 +55,9 @@ services:
       context: ./services/ts/sessions-service
       dockerfile: ../../Dockerfile.nestjs
     ports:
-      - "3003:3003"
+      - "4002:4002"
     environment:
-      - PORT=3003
+      - PORT=4002
       - NODE_ENV=production
     networks:
       - microservices
@@ -67,9 +67,9 @@ services:
       context: ./services/ts/projects-service
       dockerfile: ../../Dockerfile.nestjs
     ports:
-      - "3004:3004"
+      - "4003:4003"
     environment:
-      - PORT=3004
+      - PORT=4003
       - NODE_ENV=production
     networks:
       - microservices
@@ -92,9 +92,9 @@ services:
       context: ./services/rust/messaging-service
       dockerfile: Dockerfile
     ports:
-      - "3009:3009"
+      - "4004:4004"
     environment:
-      - PORT=3009
+      - PORT=4004
       - RUST_LOG=info
     networks:
       - microservices
@@ -105,9 +105,9 @@ services:
       context: ./services/go/transactions-service
       dockerfile: Dockerfile
     ports:
-      - "3100:3100"
+      - "4008:4008"
     environment:
-      - PORT=3100
+      - PORT=4008
     networks:
       - microservices
 
@@ -116,9 +116,9 @@ services:
       context: ./services/go/funds-service
       dockerfile: Dockerfile
     ports:
-      - "3101:3101"
+      - "4009:4009"
     environment:
-      - PORT=3101
+      - PORT=4009
     networks:
       - microservices
 
@@ -141,9 +141,9 @@ services:
       context: ./services/cs/portfolio-service
       dockerfile: Dockerfile
     ports:
-      - "3200:3200"
+      - "4010:4010"
     environment:
-      - PORT=3200
+      - PORT=4010
       - ASPNETCORE_ENVIRONMENT=Production
     networks:
       - microservices
@@ -153,9 +153,9 @@ services:
       context: ./services/cs/reporting-service
       dockerfile: Dockerfile
     ports:
-      - "3201:3201"
+      - "4011:4011"
     environment:
-      - PORT=3201
+      - PORT=4011
       - ASPNETCORE_ENVIRONMENT=Production
     networks:
       - microservices

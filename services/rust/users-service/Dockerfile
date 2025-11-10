@@ -26,10 +26,10 @@ WORKDIR /app
 COPY --from=builder /app/target/release/users-service .
 
 # Expose port
-EXPOSE 3012
+EXPOSE 4007
 
 # Set environment variables
-ENV PORT=3012
+ENV PORT=4007
 ENV RUST_LOG=info
 
 # Run the binary

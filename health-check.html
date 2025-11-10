@@ -888,7 +888,7 @@
         customElements.define('service-status-card', ServiceStatusCard);
 
         // Data collection configuration
-        const REFRESH_INTERVAL = 200;
+        const REFRESH_INTERVAL = 500;
         const DATA_POINTS = 100;
         let responseTimeData = {}; // Store response time data for each service
         let isAutoRefreshActive = false;
@@ -950,10 +950,10 @@
         const services = [
             {
                 name: 'API Gateway',
-                port: 3000,
+                port: 4000,
                 language: 'TypeScript (NestJS)',
-                endpoint: 'http://localhost:3000/health',
-                url: 'http://localhost:3000',
+                endpoint: 'http://localhost:4000/health',
+                url: 'http://localhost:4000',
                 features: [
                     'Service Discovery',
                     'Request routing',
@@ -962,10 +962,10 @@
             },
             {
                 name: 'Auth Service',
-                port: 3001,
+                port: 4001,
                 language: 'TypeScript (NestJS)',
-                endpoint: 'http://localhost:3001/health',
-                url: 'http://localhost:3001',
+                endpoint: 'http://localhost:4001/health',
+                url: 'http://localhost:4001',
                 features: [
                     'AuthN/Z',
                     'JWT/OAuth2',
@@ -975,10 +975,10 @@
             },
             {
                 name: 'Sessions Service',
-                port: 3003,
+                port: 4002,
                 language: 'TypeScript (NestJS)',
-                endpoint: 'http://localhost:3003/health',
-                url: 'http://localhost:3003',
+                endpoint: 'http://localhost:4002/health',
+                url: 'http://localhost:4002',
                 features: [
                     'ImpactPay sessions',
                     'Checkout sessions',
@@ -986,10 +986,10 @@
             },
             {
                 name: 'Projects Service',
-                port: 3004,
+                port: 4003,
                 language: 'TypeScript (NestJS)',
-                endpoint: 'http://localhost:3004/health',
-                url: 'http://localhost:3004',
+                endpoint: 'http://localhost:4003/health',
+                url: 'http://localhost:4003',
                 features: [
                     'Project metadata',
                     'Project assets & images'
@@ -997,10 +997,10 @@
             },
             {
                 name: 'Messaging Service',
-                port: 3009,
+                port: 4004,
                 language: 'Rust',
-                endpoint: 'http://localhost:3009/health',
-                url: 'http://localhost:3009',
+                endpoint: 'http://localhost:4004/health',
+                url: 'http://localhost:4004',
                 features: [
                     'Emails',
                     'Notifications',
@@ -1009,10 +1009,10 @@
             },
             {
                 name: 'Users Service',
-                port: 3012,
+                port: 4007,
                 language: 'Rust',
-                endpoint: 'http://localhost:3012/health',
-                url: 'http://localhost:3012',
+                endpoint: 'http://localhost:4007/health',
+                url: 'http://localhost:4007',
                 features: [
                     'User management',
                     'User CRUD operations',
@@ -1021,10 +1021,10 @@
             },
             {
                 name: 'Calculator Service',
-                port: 3010,
+                port: 4005,
                 language: 'Python (FastAPI)',
-                endpoint: 'http://localhost:3010/health',
-                url: 'http://localhost:3010/docs',
+                endpoint: 'http://localhost:4005/health',
+                url: 'http://localhost:4005/docs',
                 features: [
                     'Carbon emission calculations',
                     'Activity-based CO2 tracking',
@@ -1033,10 +1033,10 @@
             },
             {
                 name: 'Analytics Service',
-                port: 3011,
+                port: 4006,
                 language: 'Python (FastAPI)',
-                endpoint: 'http://localhost:3011/health',
-                url: 'http://localhost:3011/docs',
+                endpoint: 'http://localhost:4006/health',
+                url: 'http://localhost:4006/docs',
                 features: [
                     'Metrics tracking',
                     'Event tracking',
@@ -1046,20 +1046,20 @@
             },
             {
                 name: 'Transactions Service',
-                port: 3100,
+                port: 4008,
                 language: 'Go (Fiber)',
-                endpoint: 'http://localhost:3100/health',
-                url: 'http://localhost:3100',
+                endpoint: 'http://localhost:4008/health',
+                url: 'http://localhost:4008',
                 features: [
                     'All money movement records',
                 ]
             },
             {
                 name: 'Funds Service',
-                port: 3101,
+                port: 4009,
                 language: 'Go',
-                endpoint: 'http://localhost:3101/health',
-                url: 'http://localhost:3101',
+                endpoint: 'http://localhost:4009/health',
+                url: 'http://localhost:4009',
                 features: [
                     'Funds ledger',
                     'Reconciliation',
@@ -1069,10 +1069,10 @@
             },
             {
                 name: 'Portfolio Service',
-                port: 3200,
+                port: 4010,
                 language: 'C# (.NET Core)',
-                endpoint: 'http://localhost:3200/health',
-                url: 'http://localhost:3200',
+                endpoint: 'http://localhost:4010/health',
+                url: 'http://localhost:4010',
                 features: [
                     'Portfolio aggregation',
                     'Reporting',
@@ -1081,10 +1081,10 @@
             },
             {
                 name: 'Reporting Service',
-                port: 3201,
+                port: 4011,
                 language: 'C# (.NET Core)',
-                endpoint: 'http://localhost:3201/health',
-                url: 'http://localhost:3201',
+                endpoint: 'http://localhost:4011/health',
+                url: 'http://localhost:4011',
                 features: [
                     'Heavy reporting',
                     'Aggregates',
