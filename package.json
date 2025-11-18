@@ -12,7 +12,8 @@
     "docker:push": "turbo run docker:push",
     "k8s:dev:apply": "kubectl apply -k deploy/k8s/dev",
     "k8s:dev:delete": "kubectl delete -k deploy/k8s/dev",
-    "kill:dotnet": "kill -9 $(lsof -ti:3200) $(lsof -ti:3201) 2>/dev/null || echo 'No .NET services running on ports 3200-3201'"
+    "kill:dotnet": "kill -9 $(lsof -ti:3200) $(lsof -ti:3201) 2>/dev/null || echo 'No .NET services running on ports 3200-3201'",
+    "check-env": "bash scripts/check-env.sh"
   },
   "devDependencies": {
     "prettier": "^3.6.2",
